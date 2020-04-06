@@ -39,9 +39,9 @@ app
 // });
 
 io.on("connection", function (socket) {
-  socket.on("chat message", function (msg) {
-    console.log("message: " + msg);
-    io.emit("chat message", msg);
+  socket.on("chat message", function (msg, ranColor) {
+    console.log("message: " + msg, ranColor);
+    io.emit("chat message", msg, ranColor);
   });
   console.log("a user is connceted");
   socket.on("disconnect", function () {

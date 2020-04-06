@@ -1,9 +1,11 @@
 <%- include ./partials/head.ejs %>
-<h2>Chat</h2>
-<ul id="messages"></ul>
-<form action="">
-	<input  autocomplete="off" id="m">
-	<input type="submit" value="sturen">
+<form class="inlog-form" action="/home/chat" method="GET">
+	<fieldset>
+		<legend>Get started</legend>
+		<label for="user">User name: </label>
+		<input id="user" type="text" name="name">
+	</fieldset>
+		<input type="submit" value="start chat">
 </form>
 
 <%- include ./partials/footer.ejs %>
