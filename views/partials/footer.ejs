@@ -9,5 +9,25 @@
               });
             }
           </script> -->
+          <script src="/socket.io/socket.io.js"></script>
+          <script>
+            (function () {
+              var socket = io();
+              var form = document.querySelector('form').addEventListener("submit",function(e){
+                e.preventDefault(); // prevents page reloading
+                var input = document.querySelector('#m');
+                var inputValue = input.value;
+                socket.emit('chat message', inputValue);
+                input.value = '';
+                return false;
+              });
+              socket.on('chat message', function(msg){
+                var ul = document.querySelector('#messages')
+                var li = document.createElement("li")
+                li.textContent = msg;
+                ul.appendChild(li)
+              });
+            })();
+          </script>
     </body>
 </html>
