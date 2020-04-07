@@ -89,6 +89,6 @@ io.on("connection", function (socket) {
   });
 });
 
-http.listen(4000, function () {
+http.listen(config, function () {
   console.log("listening on *:4000");
 });
