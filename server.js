@@ -6,6 +6,8 @@ const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 let userName;
 let users = [];
+let loops = [];
+var loop = {};
 
 const config = {
   port: process.env.PORT || 3000,
@@ -71,12 +73,44 @@ io.on("connection", function (socket) {
         return item != "loop"
       })
       var messageToSend = filterMessage.join(" ")
+      var dateOfMessage = new Date()
+      var dateTodeleteLoop = new Date(dateOfMessage.getTime() + 1 * 60000);
+      loop = {
+        id: socket.id,
+        time: dateOfMessage,
+        timeToStop: dateTodeleteLoop,
+        message: messageToSend
+      }
+      loops.push(loop)
+      console.log(loops)
       myVal = setInterval(() => {
         io.emit("loop message", `${socket.userName}: ${messageToSend}`, ranColor);
       }, 1000);
     } else if (userMessageWordsArray[0] == "stop") {
       clearInterval(myVal)
+      loops = loops.filter(item => {
+        return item.id != socket.id
+      })
     }
+    // loops.map(item => {
+    //   setInterval(() => {
+    //     const now = new Date()
+    //     console.log("now", now)
+    //     console.log("stop", item.timeToStop)
+    //     if (now >= item.timeToStop) {
+    //       io.to(item.id).emit(clearInterval(myVal))
+    //     }
+    //   }, 1000);
+    // })
+    setInterval(() => {
+      const now = new Date()
+      console.log("now", now)
+      console.log("stop", dateTodeleteLoop)
+      if (now >= dateTodeleteLoop) {
+        clearInterval(myVal)
+      }
+    }, 1000);
+
   });
 
   socket.emit("server message", "Server: you are connceted");
@@ -90,5 +124,5 @@ io.on("connection", function (socket) {
 });
 
 http.listen(config, function () {
-  console.log("listening on *:4000");
+  console.log("listening on *:3000");
 });
