@@ -1,12 +1,14 @@
 <%- include ./partials/head.ejs %>
+<div>
 <h2>Hello <span class="user-name"><%- name %></span></h2>
-<h3>Chat with the people</h3>
+<h3>Chat with people</h3>
+</div>
+</header>
+<main>
 <ul id="messages"></ul>
-<form id="form" action="">
-	<div>
+<form class="message-form" id="form" action="">
 		<input  autocomplete="off" id="m">
-		<input type="submit" value="sturen">
-	</div>
+		<input type="submit" value="send">
 </form>
 
 <%- include ./partials/footer.ejs %>
