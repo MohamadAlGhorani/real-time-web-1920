@@ -18,13 +18,13 @@ const config = {
 //   res.redirect("/home");
 // });
 
-app.get("/", function (req, res, next) {
+app.get("/", function (req, res) {
   res.render("home", {
     title: "Home",
   });
 });
 
-app.get("/chat", function (req, res, next) {
+app.get("/chat", function (req, res) {
   userName = req.query.name
   console.log("user name", userName)
   users.push(req.query.name)
