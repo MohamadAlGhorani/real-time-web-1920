@@ -85,6 +85,11 @@ io.on("connection", function (socket) {
       console.log(loops)
       myVal = setInterval(() => {
         io.emit("loop message", `${socket.userName}: ${messageToSend}`, ranColor);
+        const now = new Date()
+        if (now >= dateTodeleteLoop) {
+          clearInterval(myVal)
+          dateTodeleteLoop = ""
+        }
       }, 1000);
     } else if (userMessageWordsArray[0] == "stop") {
       clearInterval(myVal)
@@ -102,15 +107,6 @@ io.on("connection", function (socket) {
     //     }
     //   }, 1000);
     // })
-    setInterval(() => {
-      const now = new Date()
-      console.log("now", now)
-      console.log("stop", dateTodeleteLoop)
-      if (now >= dateTodeleteLoop) {
-        clearInterval(myVal)
-      }
-    }, 1000);
-
   });
 
   socket.emit("server message", "Server: you are connceted");
