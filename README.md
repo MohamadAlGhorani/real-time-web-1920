@@ -15,4 +15,4 @@ Dit is de chat app elke gebruiker krijgt eigen tekst kleur met een passende acht
 - loop command om een bericht te herhalen 
 - stop command om de loop command te stoppen
 #### loop command
-Je kan loop schrijven voor de zin die je wilt laten herhalen dan wordt het herhaalt voor een minute asl je het zelf eerder niet hebt gestopt.
+Je kan loop schrijven voor de zin die je wilt laten herhalen dan wordt het herhaalt voor een minuut asl je het zelf eerder niet hebt gestopt.
