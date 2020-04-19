@@ -34,12 +34,15 @@
   },
   "homepage": "https://github.com/MohamadAlGhorani/progressive-web-apps-1920#readme",
   "dependencies": {
+    "cookie-parser": "^1.4.5",
     "ejs": "^2.6.1",
     "express": "^4.17.1",
     "node-fetch": "^2.6.0",
     "node-gyp": "^6.1.0",
     "nodemon": "^2.0.2",
-    "socket.io": "^2.3.0"
+    "query-string": "^6.12.1",
+    "socket.io": "^2.3.0",
+    "spotify-web-api-node": "^4.0.0"
   },
   "devDependencies": {
     "chokidar-cli": "^2.1.0",

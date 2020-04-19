@@ -1,13 +1,21 @@
 <%- include ./partials/head.ejs %>
 </header>
 <main>
-<form class="inlog-form" action="/chat" method="GET">
+<form class="join-form" action="/join" method="GET">
 	<fieldset>
-		<legend>Get started</legend>
-		<label for="user">User name: </label>
-		<input id="user" type="text" name="name">
+		<legend>Join a Party</legend>
+		<!-- <label for="user">Your Name: </label>
+		<input id="user" type="text" name="name"> -->
+		<label for="party">Party ID: </label>
+		<input id="party" type="text" name="party_id">
 	</fieldset>
-		<input type="submit" value="start chat">
+		<input type="submit" value="Join The Party">
+</form>
+<form class="inlog-form" action="/login">
+	<fieldset>
+		<legend>Create a Party</legend>
+	</fieldset>
+		<input type="submit" value="Create">
 </form>
 
 <%- include ./partials/footer.ejs %>
