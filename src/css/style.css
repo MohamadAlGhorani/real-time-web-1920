@@ -59,9 +59,9 @@ header {
   width: 77%;
 }
 
-h1,
-h2,
-h3 {
+header h1,
+header h2,
+header h3 {
   color: white;
 }
 
