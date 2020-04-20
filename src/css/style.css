@@ -39,6 +39,20 @@ header {
 
 .playlist-container {
   margin-top: 200px;
+  padding-left: 1.2em;
+}
+
+.playlist-container a p {
+  color: black;
+  padding: 1em;
+  width: 150px;
+  text-align: center;
+  border-radius: 40px;
+  border: 1px black solid;
+}
+
+.playlist-container a {
+  text-decoration: none;
 }
 
 .chat-container {
@@ -51,7 +65,7 @@ h3 {
   color: white;
 }
 
-div h3 {
+.playlist-head {
   color: black;
   position: fixed;
   padding: 1em;
@@ -83,6 +97,10 @@ div h3 {
   margin-top: 15em;
   border-radius: 10px;
   box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.087);
+}
+
+.inlog-form {
+  margin-top: 2em;
 }
 
 .inlog-form fieldset,
