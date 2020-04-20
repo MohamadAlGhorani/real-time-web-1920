@@ -3,10 +3,11 @@ var randomColor = Math.floor(Math.random() * 16777215).toString(16);
     var socket = io();
     var form = document.querySelector("#form");
     var id = document.querySelector(".id")
-    var idValue = id.textContent;
-
-    socket.emit("join party", idValue);
-    console.log(idValue)
+    if (id) {
+        var idValue = id.textContent;
+        socket.emit("join party", idValue);
+        console.log(idValue)
+    }
     if (form) {
         form.addEventListener("submit", function (e) {
             e.preventDefault(); // prevents page reloading

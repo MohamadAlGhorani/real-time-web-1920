@@ -1,0 +1,33 @@
+<%- include ./partials/head.ejs %>
+<div>
+<h2>Hello <span class="user-name"><%- name %></span></h2>
+<h3>Chat with people</h3>
+<h4>The Party code is: <span class="id"><%- id %></span> </h4>
+<p>share this code with your gusts so they can join</p>
+</div>
+</header>
+<main>
+<div class="party-container">
+	<div class="chat-container">
+		<ul id="messages"></ul>
+		<form class="message-form" id="form" action="">
+			<input  autocomplete="off" id="m">
+			<input type="submit" value="send">
+		</form>
+	</div>
+	<div class="tracks-container">
+		<h3>Playlist for this party</h3>
+		<div class="audio-container">
+			<% tracksData.items.forEach(function(track) { %>
+				<div>
+					<p><%- track.track.name %></p>
+					<audio controls src="<%- track.track.preview_url %>"></audio>
+				</div>
+			<% }) %>
+		</div>
+	</div>
+
+</div>
+
+
+<%- include ./partials/footer.ejs %>

@@ -1,14 +1,14 @@
 const express = require("express");
 const compression = require("compression");
-// const routes = require("./routes/routes");
 const fetch = require("node-fetch");
 const queryString = require("query-string");
 const cookieParser = require("cookie-parser");
-require("dotenv").config();
-var SpotifyWebApi = require("spotify-web-api-node");
+const SpotifyWebApi = require("spotify-web-api-node");
 const app = express();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
+// const routes = require("./routes/routes");
+require("dotenv").config();
 
 const {
   SPOTIFY_REDIRECT_URI,
@@ -16,19 +16,29 @@ const {
   SPOTIFY_CLIENT_ID,
 } = process.env;
 
-let userName;
-var partyId;
-var idToJoin;
+var spotifyApi = new SpotifyWebApi({
+  clientId: process.env.SPOTIFY_CLIENT_ID,
+  clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+  redirectUri: process.env.SPOTIFY_REDIRECT_URI
+});
+
 let users = [];
-let loops = [];
-var loop = {};
 
 const config = {
-  port: process.env.PORT || 3000,
+  port: process.env.PORT || 5000,
 };
 
+app
+  .set("view engine", "ejs")
+  .set("views", "views")
+
+  .use(compression())
+  .use(express.static("static"))
+  .use(cookieParser());
+// .use("/", routes);
+
 app.get("/login", function (req, res) {
-  var scopes = "user-read-private user-read-email";
+  var scopes = 'streaming user-read-private user-read-email user-read-playback-state user-modify-playback-state user-top-read';
   const {
     SPOTIFY_CLIENT_ID,
     SPOTIFY_REDIRECT_URI
@@ -70,9 +80,7 @@ app.get("/callback", async (request, response, next) => {
     response.cookie("accessToken", data.access_token);
     response.cookie("refreshToken", data.refresh_token);
 
-    // response.send(data);
-    partyId = genraterandomId(10)
-    response.redirect(`/chat-${partyId}`);
+    response.redirect(`/setup`);
   } catch (error) {
     console.log("Error!!!", error);
 
@@ -90,45 +98,60 @@ app.get("/", function (req, res) {
   });
 });
 
-app.get("/chat-:id", function (req, res) {
-  // userName = req.query.name;
-  // console.log("user name", userName);
-  // users.push(req.query.name);
-  // console.log("users", users);
-  res.render("chat", {
-    title: "Chat",
-    // name: req.query.name,
-    name: "blabla",
-    id: req.params.id
+app.get("/setup", function (req, res) {
+  const token = req.cookies.accessToken;
+  console.log(token);
+  fetch("https://api.spotify.com/v1/me", {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    }
+  }).then(async response => {
+    const data = await response.json();
+    fetch(`https://api.spotify.com/v1/users/${data.id}/playlists`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      }
+    }).then(async response => {
+      const playlistsData = await response.json();
+      console.log(playlistsData)
+      res.render("setup", {
+        title: "Setup",
+        playlistsData: playlistsData,
+      });
+    });
+  })
+});
+
+app.get("/party-:id", function (req, res) {
+  const token = req.cookies.accessToken;
+  console.log(token);
+  fetch(`https://api.spotify.com/v1/playlists/${req.params.id}/tracks`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    }
+  }).then(async response => {
+    const tracksData = await response.json();
+    console.log(tracksData)
+    res.render("party", {
+      title: "Party",
+      tracksData: tracksData,
+      name: "user",
+      id: req.params.id
+    });
   });
 });
 
 app.get("/join", function (req, res) {
   const party_id = req.query.party_id;
   idToJoin = req.query.party_id
-  res.redirect(`/chat-${party_id}`);
-  // userName = req.query.name;
-  // console.log("user name", userName);
-  // users.push(req.query.name);
-  // console.log("users", users);
-  // res.render("chat", {
-  //   title: "Chat",
-  //   name: req.query.name,
-  // });
+  res.redirect(`/party-${party_id}`);
 });
 
-app
-  .set("view engine", "ejs")
-  .set("views", "views")
 
-  .use(compression())
-  .use(express.static("static"))
-  .use(cookieParser());
-// .use("/home", routes);
 
-// .listen(config.port, function () {
-//   console.log(`Application started on port: ${config.port}`);
-// });
 io.on("connection", function (socket) {
   // socket.userName = userName;
   socket.on("join party", function (id) {
@@ -156,20 +179,5 @@ io.on("connection", function (socket) {
 });
 
 http.listen(config, function () {
-  console.log("listening on *:3000");
+  console.log("listening on *:5000");
 });
-
-// this helper function is from Kris Kuiper
-function genraterandomId(length) {
-  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let randomString = '';
-
-  for (let index = 0; index < length; index++) {
-    const randomInteger = Math.floor(Math.random() * possible.length);
-    const randomLetter = possible[randomInteger];
-
-    randomString += randomLetter;
-  }
-
-  return randomString;
-}
