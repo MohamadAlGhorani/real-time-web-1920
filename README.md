@@ -1,18 +1,31 @@
 # Real-Time Web @cmda-minor-web · 2019-2020
-## Opdtracht 1 Chat app
-Ik heb een inlog scherm gedaan zodat iedereen zijn eigen naam kan typen of een nickname.
-<img width="1280" alt="Screenshot 2020-04-09 at 16 01 01" src="https://user-images.githubusercontent.com/45425087/78903446-6d355800-7a7b-11ea-9c22-0445bdb8650e.png">
-Dit is de chat app elke gebruiker krijgt eigen tekst kleur met een passende achtergrond kleur voor de bericht.
-<img width="1280" alt="Screenshot 2020-04-09 at 16 00 52" src="https://user-images.githubusercontent.com/45425087/78903457-70304880-7a7b-11ea-8552-cced9ae2024e.png">
+screenshot van de app komt hier later
+## concept 
+Mijn concept is om mensen te laten feest geven thuis in deze moeilijke situatie met Covid19. Het idee is om mensen met elkaar te brengen in een virtual party zodat ze met elkaar kunnen chatten en samen naar muziek luisteren. 
+De muziek voor de party moet al in een playlist staan op de gebruiker account en wanneer de gebruiker inlogt met zijn spotify account (OAuth) en gaat een party cereeren, moet de gebruiker een playlist kiezen voor de party.
 
-### events 
+## Installation
+- Download [Node.js](https://nodejs.org/en/) if you don't have it. 
+- Clone this repository.
+- Navigate to the folder of the repository using your terminal.
+- Write in your terminal ```npm install``` to download the node modules.
+- Run ``` npm run dev ``` in your terminal to open the porject in your brwoser using localhost:3000/
+
+## Real-time events
 - chat message
 - server message
-- loop message
+- disconnected
+- connection
+- join party
 
-### Features
-- eigen kleur voor elke gebruiker 
-- loop command om een bericht te herhalen 
-- stop command om de loop command te stoppen
-#### loop command
-Je kan loop schrijven voor de zin die je wilt laten herhalen dan wordt het herhaalt voor een minuut asl je het zelf eerder niet hebt gestopt.
+## Data life cycle
+<img width="701" alt="Screenshot 2020-04-17 at 11 32 42" src="https://user-images.githubusercontent.com/45425087/79802132-bd57c880-835f-11ea-9893-94e36ea9f9e4.png">
+
+
+## APi
+I used [spotify](https://www.npmjs.com/package/spotify-web-api-node) api to get all the data about the users, their playlists and their tracks in the playlists.
+If you want to use this API you have to ask for a accessToken that you can use to access the data.
+This application uses a OAuth. Users can sign up with their spotify account to creat a party 
+
+## License
+License is [MIT](https://github.com/MohamadAlGhorani/real-tim-web-1920/blob/master/LICENSE) 
