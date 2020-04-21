@@ -80,7 +80,7 @@ app.get("/callback", async (request, response, next) => {
     response.cookie("accessToken", data.access_token);
     response.cookie("refreshToken", data.refresh_token);
 
-    response.redirect(`/setup`);
+    response.redirect(`/home`);
   } catch (error) {
     console.log("Error!!!", error);
 
@@ -93,6 +93,12 @@ function encodeToBase64(text) {
 }
 
 app.get("/", function (req, res) {
+  res.render("login", {
+    title: "Login with your premium spotify account",
+  });
+});
+
+app.get("/home", function (req, res) {
   res.render("home", {
     title: "Home",
   });
@@ -179,11 +185,11 @@ io.on("connection", function (socket) {
 
   socket.on("getSong", function (id) {
     socket.to(socket.roomId).emit('getTokens', id)
-  })
+  });
   socket.on("playSong", function (myObject) {
-    console.log("my object is:", myObject)
+    console.log("my object is:", myObject);
     // const query = queryString.stringify({
-    //   uris: [`spotify:track:${myObject.id}`]
+    //   uris: ['spotify:track:${myObject.id}']
     // })
     fetch(`https://api.spotify.com/v1/me/player/play`, {
       method: "PUT",
@@ -196,9 +202,11 @@ io.on("connection", function (socket) {
       })
     }).then(async response => {
       const tracksData = await response.json();
-      console.log(tracksData)
+      console.log(tracksData);
+      // response.status = 404 no device found;
+      // response. status = 403 no premuim account;
     });
-  })
+  });
 });
 
 http.listen(config, function () {

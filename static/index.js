@@ -1,9 +1,6 @@
 var randomColor = Math.floor(Math.random() * 16777215).toString(16);
 const btns = document.querySelectorAll(".play-btn");
 
-for (btn of btns) {
-    btn.addEventListener("click", playSong)
-}
 var socket = io();
 var form = document.querySelector("#form");
 var id = document.querySelector(".id")
@@ -11,6 +8,17 @@ if (id) {
     var idValue = id.textContent;
     socket.emit("join party", idValue);
     console.log(idValue)
+}
+
+for (btn of btns) {
+    btn.addEventListener("click", playSong)
+}
+
+function playSong(event) {
+    console.log(event.target)
+    const songId = event.target.dataset.id;
+    console.log(songId)
+    socket.emit("getSong", songId)
 }
 if (form) {
     form.addEventListener("submit", function (e) {
@@ -39,13 +47,6 @@ socket.on("server message", function (msg) {
     ul.appendChild(li);
     li.scrollIntoView();
 });
-
-function playSong(event) {
-    console.log(event.target)
-    const songId = event.target.dataset.id;
-    console.log(songId)
-    socket.emit("getSong", songId)
-}
 
 socket.on("getTokens", function (id) {
     const accessToken = document.cookie.split(";").find(item => {
