@@ -16,6 +16,14 @@ header {
   background-color: blueviolet;
 }
 
+input {
+  font-size: 12px;
+}
+
+input:focus {
+  font-size: 12px;
+}
+
 .party-container {
   display: flex;
   justify-content: space-between;
@@ -195,7 +203,8 @@ ul li:nth-of-type(even) {
 }
 
 .server-message {
-  color: red;
+  color: blueviolet;
+  font-weight: bold;
   background-color: lightgray;
 }
 

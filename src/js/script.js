@@ -13,9 +13,6 @@ function copyCode() {
 
     /* Copy the text inside the text field */
     document.execCommand("copy");
-
-    /* Alert the copied text */
-    alert("Copied the party code: " + copyText.value);
 }
 
 copyBtn.addEventListener("click", copyCode)
