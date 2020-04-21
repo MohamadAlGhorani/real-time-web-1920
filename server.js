@@ -183,7 +183,7 @@ io.on("connection", function (socket) {
   socket.on("playSong", function (myObject) {
     console.log("my object is:", myObject)
     const query = queryString.stringify({
-      context_uri: myObject.id
+      context_uri: `spotify:track:${myObject.id}`
     })
     fetch(`https://api.spotify.com/v1/me/player/play?${query}`, {
       method: "PUT",
