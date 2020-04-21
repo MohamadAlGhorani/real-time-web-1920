@@ -23,6 +23,7 @@ var spotifyApi = new SpotifyWebApi({
 });
 
 let users = [];
+let userName
 
 const config = {
   port: process.env.PORT || 5000,
@@ -114,6 +115,7 @@ app.get("/setup", function (req, res) {
     }
   }).then(async response => {
     const data = await response.json();
+    userName = data.display_name
     fetch(`https://api.spotify.com/v1/users/${data.id}/playlists`, {
       headers: {
         'Content-Type': 'application/json',
@@ -144,7 +146,7 @@ app.get("/party-:id", function (req, res) {
     res.render("party", {
       title: "Party",
       tracksData: tracksData,
-      name: "user",
+      name: userName,
       id: req.params.id
     });
   });
@@ -159,28 +161,26 @@ app.get("/join", function (req, res) {
 
 
 io.on("connection", function (socket) {
-  // socket.userName = userName;
+  socket.userName = userName;
   socket.on("join party", function (id) {
     socket.roomId = id
     socket.join(socket.roomId);
   });
 
   socket.on("chat message", function (msg, ranColor) {
-    io.to(socket.roomId).emit("chat message", `${msg}`, ranColor);
+    io.to(socket.roomId).emit("chat message", `${userName}: ${msg}`, ranColor);
   });
 
   socket.emit("server message", "Server: you are connceted");
   socket.broadcast.emit(
     "server message",
-    // `Server: ${socket.userName} is connceted`
-    `Server:  is connceted`
+    `Server: ${socket.userName} is connceted`
   );
   console.log("a user is connceted");
 
   socket.on("disconnect", function () {
     console.log("user disconnected");
-    // io.emit("server message", `Server: ${socket.userName} is disconnected`);
-    io.to(socket.roomId).emit("server message", `Server: is disconnected`);
+    io.emit("server message", `Server: ${socket.userName} is disconnected`);
   });
 
   socket.on("getSong", function (id) {
