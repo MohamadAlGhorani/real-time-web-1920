@@ -1,11 +1,30 @@
 var randomColor = Math.floor(Math.random() * 16777215).toString(16);
 const btns = document.querySelectorAll(".play-btn");
+const copyBtn = document.querySelector(".copy")
+
+
+function copyCode() {
+    /* Get the text field */
+    const copyText = document.querySelector(".id");
+
+    /* Select the text field */
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+
+    /* Copy the text inside the text field */
+    document.execCommand("copy");
+
+    /* Alert the copied text */
+    alert("Copied the party code: " + copyText.value);
+}
+
+copyBtn.addEventListener("click", copyCode)
 
 var socket = io();
 var form = document.querySelector("#form");
 var id = document.querySelector(".id")
 if (id) {
-    var idValue = id.textContent;
+    var idValue = id.value;
     socket.emit("join party", idValue);
     console.log(idValue)
 }
