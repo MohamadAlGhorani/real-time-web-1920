@@ -182,15 +182,18 @@ io.on("connection", function (socket) {
   })
   socket.on("playSong", function (myObject) {
     console.log("my object is:", myObject)
-    const query = queryString.stringify({
-      uris: [`spotify:track:${myObject.id}`]
-    })
-    fetch(`https://api.spotify.com/v1/me/player/play?${query}`, {
+    // const query = queryString.stringify({
+    //   uris: [`spotify:track:${myObject.id}`]
+    // })
+    fetch(`https://api.spotify.com/v1/me/player/play`, {
       method: "PUT",
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${myObject.accessToken}`,
-      }
+      },
+      body: JSON.stringify({
+        uris: [`spotify:track:${myObject.id}`]
+      })
     }).then(async response => {
       const tracksData = await response.json();
       console.log(tracksData)
