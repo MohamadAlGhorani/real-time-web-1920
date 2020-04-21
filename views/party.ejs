@@ -21,7 +21,8 @@
 			<% tracksData.items.forEach(function(track) { %>
 				<div>
 					<p><%- track.track.name %></p>
-					<audio controls src="<%- track.track.preview_url %>"></audio>
+					<button data-id="<%- track.track.id %>" class="play-btn">play</button>
+					<!-- <audio controls src="<%- track.track.preview_url %>"></audio> -->
 				</div>
 			<% }) %>
 		</div>

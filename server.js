@@ -176,6 +176,26 @@ io.on("connection", function (socket) {
     // io.emit("server message", `Server: ${socket.userName} is disconnected`);
     io.to(socket.roomId).emit("server message", `Server: is disconnected`);
   });
+
+  socket.on("getSong", function (id) {
+    socket.to(socket.roomId).emit('getTokens', id)
+  })
+  socket.on("playSong", function (myObject) {
+    console.log("my object is:", myObject)
+    const query = queryString.stringify({
+      context_uri: myObject.id
+    })
+    fetch(`https://api.spotify.com/v1/me/player/play?${query}`, {
+      method: "PUT",
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${myObject.accessToken}`,
+      }
+    }).then(async response => {
+      const tracksData = await response.json();
+      console.log(tracksData)
+    });
+  })
 });
 
 http.listen(config, function () {
