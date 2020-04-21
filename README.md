@@ -28,4 +28,4 @@ If you want to use this API you have to ask for a accessToken that you can use t
 This application uses a OAuth. Users can sign up with their spotify account to creat a party 
 
 ## License
-License is [MIT](https://github.com/MohamadAlGhorani/real-tim-web-1920/blob/master/LICENSE) 
+License is [MIT](https://github.com/MohamadAlGhorani/real-time-web-1920/blob/master/LICENSE) 
