@@ -152,31 +152,31 @@ app.get("/join", function (req, res) {
 
 
 
-// io.on("connection", function (socket) {
-//   // socket.userName = userName;
-//   socket.on("join party", function (id) {
-//     socket.roomId = id
-//     socket.join(socket.roomId);
-//   });
+io.on("connection", function (socket) {
+  // socket.userName = userName;
+  socket.on("join party", function (id) {
+    socket.roomId = id
+    socket.join(socket.roomId);
+  });
 
-//   socket.on("chat message", function (msg, ranColor) {
-//     io.to(socket.roomId).emit("chat message", `${msg}`, ranColor);
-//   });
+  socket.on("chat message", function (msg, ranColor) {
+    io.to(socket.roomId).emit("chat message", `${msg}`, ranColor);
+  });
 
-//   socket.emit("server message", "Server: you are connceted");
-//   socket.broadcast.emit(
-//     "server message",
-//     // `Server: ${socket.userName} is connceted`
-//     `Server:  is connceted`
-//   );
-//   console.log("a user is connceted");
+  socket.emit("server message", "Server: you are connceted");
+  socket.broadcast.emit(
+    "server message",
+    // `Server: ${socket.userName} is connceted`
+    `Server:  is connceted`
+  );
+  console.log("a user is connceted");
 
-//   socket.on("disconnect", function () {
-//     console.log("user disconnected");
-//     // io.emit("server message", `Server: ${socket.userName} is disconnected`);
-//     io.to(socket.roomId).emit("server message", `Server: is disconnected`);
-//   });
-// });
+  socket.on("disconnect", function () {
+    console.log("user disconnected");
+    // io.emit("server message", `Server: ${socket.userName} is disconnected`);
+    io.to(socket.roomId).emit("server message", `Server: is disconnected`);
+  });
+});
 
 http.listen(config, function () {
   console.log("listening on *:5000");
