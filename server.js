@@ -177,7 +177,7 @@ io.on("connection", function (socket) {
     io.to(socket.roomId).emit("chat message", `${userName}: ${msg}`, ranColor);
   });
 
-  socket.emit("server message", "Server: you are connceted");
+  socket.emit("server message", "Server: you are connceted open your spotify app to listen to the party music");
   socket.broadcast.emit(
     "server message",
     `Server: ${socket.userName} is connceted`
