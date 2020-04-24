@@ -24,7 +24,6 @@ require("dotenv").config();
 // });
 
 let allUsers = [];
-let userName;
 
 const config = {
   port: process.env.PORT || 3000,
@@ -49,21 +48,22 @@ app
 
 io.on("connection", function (socket) {
   socket.emit("getUserName")
-  socket.on("userName", function (token) {
+  socket.on("userName", async function (token) {
     console.log(token);
-    fetch("https://api.spotify.com/v1/me", {
+    const userName = await fetch("https://api.spotify.com/v1/me", {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       }
     }).then(async (response) => {
       const data = await response.json();
-      userName = data.display_name;
-      socket.userName = userName
-      console.log(socket.userName)
+      return data.display_name;
     });
+    // console.log(userName)
+    socket.userName = userName
   })
 
+  console.log(socket.userName)
   const user = {
     userName: socket.userName,
     id: socket.id,
