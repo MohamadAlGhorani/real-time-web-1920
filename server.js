@@ -64,6 +64,9 @@ app
       }).then((response) => response.json()),
     ]).then(([tracksData, data]) => {
       userName = data.display_name;
+      io.on("connection", function (socket) {
+        socket.userName = userName
+      });
       res.render("party", {
         title: "Party",
         tracksData: tracksData,
@@ -101,6 +104,7 @@ io.on("connection", function (socket) {
   let geustsInRoom = geusts.length
 
   socket.emit("online users", geusts, geustsInRoom);
+  socket.broadcast.emit("online users", geusts, geustsInRoom);
 
   socket.on("chat message", function (msg, ranColor) {
     io.to(socket.roomId).emit("chat message", `${userName}: ${msg}`, ranColor);
