@@ -37,7 +37,6 @@ input:focus {
   position: absolute;
   top: 110px;
   right: 60%;
-  z-index: 999999999;
 }
 
 .tracks-container {
@@ -54,6 +53,53 @@ input:focus {
   -webkit-scroll-snap-destination: 0% 0%;
   -webkit-overflow-scrolling: touch;
   height: 95.5vh;
+  border-left: 1px solid black;
+}
+
+.userList {
+  transition: all 1s ease-in-out;
+  background-color: white;
+  padding: 1em;
+  position: fixed;
+  width: 23%;
+  right: 300px;
+  top: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-scroll-snap-destination: 0% 0%;
+  -webkit-overflow-scrolling: touch;
+  height: 95.5vh;
+  border-left: 1px solid black;
+  z-index: 98;
+}
+
+
+.userList ul {
+  margin: 0;
+}
+
+.closed {
+  transition: all 1s ease-in-out;
+  right: 0;
+  overflow-y: visible;
+  overflow-x: visible;
+}
+
+.pik {
+  left: -52px;
+  position: absolute;
+  z-index: 9999999999999;
+}
+
+.audio-container div p {
+  margin-bottom: 5px;
+}
+
+.audio-container div {
+  margin-bottom: 1em;
+  padding-bottom: 1em;
+  border-bottom: 1px solid black;
 }
 
 .playlist-container {
@@ -96,7 +142,7 @@ header h4 {
   top: 0;
   right: 0;
   margin-top: 0;
-  z-index: 999999;
+  z-index: 999;
   width: 22.5%;
 }
 
@@ -180,21 +226,10 @@ ul li {
   padding: 1em;
 }
 
-/* ul li:nth-of-type(odd) {
-  background-color: lightgray;
-  padding: 1em;
-}
-
-ul li:nth-of-type(even) {
-  background-color: white;
-  padding: 1em;
-} */
-
 .message-form {
   width: 73%;
   position: fixed;
   bottom: 0;
-
 }
 
 .message-form input {

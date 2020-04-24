@@ -3,7 +3,7 @@
 <h2>Hello <span class="user-name"><%- name %></span></h2>
 <h3>Chat with people</h3>
 <h4>The Party code is: <input readonly class="id" type="text" value="<%- id %>"><button class="copy">Copy</button></h4>
-<p>share this code with your gusts so they can join</p>
+<p>share this code with your guests so they can join</p>
 <div id="lights" ></div>
 </div>
 </header>
@@ -22,11 +22,15 @@
 			<% tracksData.items.forEach(function(track) { %>
 				<div>
 					<p><%- track.track.name %></p>
-					<button data-id="<%- track.track.id %>" class="play-btn">play</button>
-					<!-- <audio controls src="<%- track.track.preview_url %>"></audio> -->
+					<button data-id="<%- track.track.id %>" class="play-btn">Play</button>
 				</div>
 			<% }) %>
 		</div>
+	</div>
+	<div class="userList">
+		<button class="close">Close</button>
+		<ul>
+		</ul>
 	</div>
 
 </div>
