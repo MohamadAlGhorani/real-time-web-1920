@@ -4,11 +4,20 @@ const btns = document.querySelectorAll(".play-btn");
 var socket = io();
 var form = document.querySelector("#form");
 var id = document.querySelector(".id")
+
 if (id) {
     var idValue = id.value;
     socket.emit("join party", idValue);
     console.log(idValue)
 }
+
+socket.on("getUserName", function () {
+    const token = document.cookie.split(";").find(item => {
+        return item.includes("accessToken")
+    }).split("=")[1].trim()
+
+    socket.emit("userName", token)
+})
 
 for (btn of btns) {
     btn.addEventListener("click", playSong)

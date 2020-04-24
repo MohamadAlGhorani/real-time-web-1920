@@ -45,39 +45,24 @@ app
   .get("/home", homeRoute)
   .get("/setup", setupRoute)
   .get("/join", joinRoute)
-
-  .get("/party-:id", function (req, res) {
-    const token = req.cookies.accessToken;
-    console.log(token);
-    Promise.all([
-      fetch(`https://api.spotify.com/v1/playlists/${req.params.id}/tracks`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }).then((response) => response.json()),
-      fetch("https://api.spotify.com/v1/me", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }).then((response) => response.json()),
-    ]).then(([tracksData, data]) => {
-      userName = data.display_name;
-      io.on("connection", function (socket) {
-        socket.userName = userName
-      });
-      res.render("party", {
-        title: "Party",
-        tracksData: tracksData,
-        name: userName,
-        id: req.params.id,
-      });
-    });
-  });
+  .get("/party-:id", partyRoute);
 
 io.on("connection", function (socket) {
-  socket.userName = userName;
+  socket.emit("getUserName")
+  socket.on("userName", function (token) {
+    console.log(token);
+    fetch("https://api.spotify.com/v1/me", {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      }
+    }).then(async (response) => {
+      const data = await response.json();
+      userName = data.display_name;
+      socket.userName = userName
+      console.log(socket.userName)
+    });
+  })
 
   const user = {
     userName: socket.userName,
@@ -107,7 +92,7 @@ io.on("connection", function (socket) {
   socket.broadcast.emit("online users", geusts, geustsInRoom);
 
   socket.on("chat message", function (msg, ranColor) {
-    io.to(socket.roomId).emit("chat message", `${userName}: ${msg}`, ranColor);
+    io.to(socket.roomId).emit("chat message", `${socket.userName}: ${msg}`, ranColor);
   });
 
   socket.emit(
@@ -123,7 +108,7 @@ io.on("connection", function (socket) {
   socket.on("disconnect", function () {
     console.log("user disconnected");
     io.emit("server message", `Server: ${socket.userName} is disconnected`);
-    io.emit("online users", geusts);
+    io.emit("online users", geusts, geustsInRoom);
   });
 
   socket.on("getSong", function (id) {
