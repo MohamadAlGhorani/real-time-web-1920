@@ -88,13 +88,14 @@ if (id) {
     console.log(idValue)
 }
 
-socket.on("getUserName", function () {
-    const token = document.cookie.split(";").find(item => {
-        return item.includes("accessToken")
-    }).split("=")[1].trim()
-
-    socket.emit("userName", token)
-})
+// socket.on("getUserName", function () {
+//     // const token = document.cookie.split(";").find(item => {
+//     //     return item.includes("accessToken")
+//     // }).split("=")[1].trim()
+//     const userName = document.querySelector(".user-name").textContent
+//     console.log(userName)
+//     socket.emit("userName", userName)
+// })
 
 for (btn of btns) {
     btn.addEventListener("click", playSong)

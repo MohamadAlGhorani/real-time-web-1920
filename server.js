@@ -24,6 +24,7 @@ require("dotenv").config();
 // });
 
 let allUsers = [];
+let userName;
 
 const config = {
   port: process.env.PORT || 3000,
@@ -44,31 +45,47 @@ app
   .get("/home", homeRoute)
   .get("/setup", setupRoute)
   .get("/join", joinRoute)
-  .get("/party-:id", partyRoute);
+  .get("/party-:id", function (req, res) {
+    const token = req.cookies.accessToken;
+    console.log(token);
+    Promise.all([
+      fetch(`https://api.spotify.com/v1/playlists/${req.params.id}/tracks`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        }
+      }).then(response => response.json()),
+      fetch("https://api.spotify.com/v1/me", {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        }
+      }).then(response => response.json())
+    ]).then(([tracksData, data]) => {
+      userName = data.display_name
+      res.render("party", {
+        title: "Party",
+        tracksData: tracksData,
+        name: userName,
+        id: req.params.id
+      });
+    });
+  });
 
 io.on("connection", function (socket) {
-  socket.emit("getUserName")
-  socket.on("userName", async function (token) {
-    console.log(token);
-    const userName = await fetch("https://api.spotify.com/v1/me", {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      }
-    }).then(async (response) => {
-      const data = await response.json();
-      return data.display_name;
-    });
-    // console.log(userName)
-    socket.userName = userName
-  })
+  // socket.emit("getUserName")
+  // socket.on("userName", function (userName) {
+  //   socket.userName = userName
+  //   console.log(socket.userName)
+  // })
 
-  console.log(socket.userName)
-  const user = {
-    userName: socket.userName,
-    id: socket.id,
-  };
-  allUsers.push(user);
+  // const user = {
+  //   userName: socket.userName,
+  //   id: socket.id,
+  // };
+  // allUsers.push(user);
+
+  socket.userName = userName
 
   socket.on("join party", function (id) {
     socket.roomId = id;

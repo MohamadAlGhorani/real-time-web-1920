@@ -1,5 +1,5 @@
 const fetch = require("node-fetch");
-
+let userName;
 module.exports = function (req, res) {
     const token = req.cookies.accessToken;
     console.log(token);
@@ -17,7 +17,7 @@ module.exports = function (req, res) {
             }
         }).then(response => response.json())
     ]).then(([tracksData, data]) => {
-        let userName = data.display_name
+        userName = data.display_name
         res.render("party", {
             title: "Party",
             tracksData: tracksData,
