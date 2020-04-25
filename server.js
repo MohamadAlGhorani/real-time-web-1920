@@ -25,6 +25,7 @@ require("dotenv").config();
 
 let allUsers = [];
 let userName;
+let roomId;
 
 const config = {
   port: process.env.PORT || 3000,
@@ -63,6 +64,7 @@ app
       }).then(response => response.json())
     ]).then(([tracksData, data]) => {
       userName = data.display_name
+      roomId = req.params.id
       res.render("party", {
         title: "Party",
         tracksData: tracksData,
@@ -124,8 +126,12 @@ io.on("connection", function (socket) {
 
   socket.on("disconnect", function () {
     console.log("user disconnected");
+    let leftUsers = geusts.filter(item => {
+      return item.id != socket.id
+    })
+    let leftUsersNumber = leftUsers.length
     io.emit("server message", `Server: ${socket.userName} is disconnected`);
-    io.emit("online users", geusts, geustsInRoom);
+    io.emit("online users", leftUsers, leftUsersNumber);
   });
 
   socket.on("getSong", function (id) {
