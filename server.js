@@ -107,8 +107,8 @@ io.on("connection", function (socket) {
   console.log("users", geusts);
   let geustsInRoom = geusts.length
 
-  socket.emit("online users", geusts, geustsInRoom);
-  socket.broadcast.emit("online users", geusts, geustsInRoom);
+  socket.to(socket.roomId).emit("online users", geusts, geustsInRoom);
+  // socket.broadcast.emit("online users", geusts, geustsInRoom);
 
   socket.on("chat message", function (msg, ranColor) {
     io.to(socket.roomId).emit("chat message", `${socket.userName}: ${msg}`, ranColor);
