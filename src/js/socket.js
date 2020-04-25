@@ -10,16 +10,6 @@ if (id) {
     socket.emit("join party", idValue);
     console.log(idValue)
 }
-
-// socket.on("getUserName", function () {
-//     // const token = document.cookie.split(";").find(item => {
-//     //     return item.includes("accessToken")
-//     // }).split("=")[1].trim()
-//     const userName = document.querySelector(".user-name").textContent
-//     console.log(userName)
-//     socket.emit("userName", userName)
-// })
-
 for (btn of btns) {
     btn.addEventListener("click", playSong)
 }
@@ -72,6 +62,8 @@ socket.on("online users", function (users, usersNumber) {
     console.log(users)
     console.log(usersNumber)
     var userList = document.querySelector(".userList ul")
+    var NumOfUsers = document.querySelector(".users-number")
+    NumOfUsers.textContent = usersNumber
     console.dir(userList)
     Array.from(userList.children).map(item => {
         item.remove()
