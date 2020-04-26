@@ -4,7 +4,7 @@ const btns = document.querySelectorAll(".play-btn");
 var socket = io();
 var form = document.querySelector("#form");
 
-console.log(room, name)
+// console.log(room, name)
 
 for (btn of btns) {
     btn.addEventListener("click", playSong)
@@ -35,6 +35,18 @@ if (form) {
         input.value = "";
         return false;
     });
+
+    socket.on("server message", function (msg) {
+        var ul = document.querySelector("#messages");
+        var li = document.createElement("li");
+        li.textContent = msg;
+        li.classList.add("server-message");
+        ul.appendChild(li);
+        li.scrollIntoView();
+    });
+    socket.on("get users", function () {
+        socket.emit("users list", room);
+    });
 }
 socket.on("chat message", function (msg, ranColor) {
     var ul = document.querySelector("#messages");
@@ -42,19 +54,6 @@ socket.on("chat message", function (msg, ranColor) {
     li.textContent = msg;
     li.style.color = "#" + ranColor;
     li.style.backgroundColor = "#1A" + ranColor;
-    ul.appendChild(li);
-    li.scrollIntoView();
-});
-
-socket.on("get users", function () {
-    socket.emit("users list", room);
-});
-
-socket.on("server message", function (msg) {
-    var ul = document.querySelector("#messages");
-    var li = document.createElement("li");
-    li.textContent = msg;
-    li.classList.add("server-message");
     ul.appendChild(li);
     li.scrollIntoView();
 });

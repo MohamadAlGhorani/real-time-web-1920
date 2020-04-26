@@ -12,5 +12,6 @@ function copyCode() {
     /* Copy the text inside the text field */
     document.execCommand("copy");
 }
-
-copyBtn.addEventListener("click", copyCode)
+if (copyBtn) {
+    copyBtn.addEventListener("click", copyCode)
+}
