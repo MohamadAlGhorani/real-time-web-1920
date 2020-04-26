@@ -96,19 +96,6 @@ io.on("connection", function (socket) {
 
   socket.emit("get users");
 
-  // let clients = io.sockets.clients(socket.roomId);
-  // let clientsArr = Object.keys(clients.connected).map(function (key) {
-  //   return clients.connected[key];
-  // });
-  // let geusts = clientsArr.map((user) => {
-  //   return {
-  //     userName: user.userName,
-  //     id: user.id
-  //   };
-  // });
-  // console.log("users", geusts);
-  // let geustsInRoom = geusts.length
-
   socket.on("users list", function (room) {
     let clients = io.in(room).clients((error, clients) => {
       let geusts = clients.map(client => {
@@ -121,36 +108,7 @@ io.on("connection", function (socket) {
       let guestsInRoom = clients.length
       io.to(room).emit("online users", geusts, guestsInRoom);
     })
-
-    // console.log(clients)
-    // let clientsArr = Object.keys(clients.connected).map(function (key) {
-    //   return clients.connected[key];
-    // });
-    // let geusts = clientsArr.map((user) => {
-    //   return {
-    //     userName: user.userName,
-    //     id: user.id
-    //   };
-    // });
-    // console.log("users", geusts);
-
-    // var clients = io.in(room)
-    // console.log(clients)
-    // let clientsArr = Object.keys(clients.sockets).forEach(item => {
-    //   console.log("hiiiiiiiiii", clients.sockets[item])
-    // })
-
-
-    // getUserRooms(socket).forEach(room => {
-    //   let leftGuests = geusts
-    //   let lleftGuestsNumber = leftGuests.length
-    //   socket.to(room).emit("online users", leftGuests, lleftGuestsNumber);
-    // })
-    // let clients = io.of(`/party-${room}`).in(room).clients
   });
-
-  // socket.to(socket.roomId).emit("online users", geusts, geustsInRoom);
-  // socket.broadcast.to(socket.roomId).emit("online users", geusts, geustsInRoom);
 
   socket.on("chat message", function (msg, ranColor, room) {
     socket.to(room).broadcast.emit("chat message", `${socket.userName}: ${msg}`, ranColor);
@@ -159,11 +117,6 @@ io.on("connection", function (socket) {
   socket.on("disconnect", function () {
     getUserRooms(socket).forEach(room => {
       socket.to(room).broadcast.emit('server message', `Server: ${rooms[room].users[socket.id]} is disconnected`)
-      // let leftUsers = geusts.filter(item => {
-      //   return item.id != socket.id
-      // })
-      // let leftUsersNumber = leftUsers.length
-      // socket.to(room).emit("online users", leftUsers, leftUsersNumber);
       let clients = io.in(room).clients((error, clients) => {
         let geusts = clients.map(client => {
           return {
@@ -171,9 +124,11 @@ io.on("connection", function (socket) {
             id: io.sockets.connected[client].id
           }
         })
-        console.log(geusts)
-        let guestsInRoom = clients.length
-        io.to(room).emit("online users", geusts, guestsInRoom);
+        let leftUsers = geusts.filter(item => {
+          return item.id != socket.id
+        })
+        let leftUsersNumber = leftUsers.length
+        socket.to(room).emit("online users", leftUsers, leftUsersNumber);
       })
       delete rooms[room].users[socket.id]
     })
