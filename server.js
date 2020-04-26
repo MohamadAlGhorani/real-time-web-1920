@@ -115,7 +115,7 @@ io.on("connection", function (socket) {
   });
 
   socket.on("getSong", function (id, room) {
-    socket.to(room).emit("getTokens", id);
+    socket.emit("getTokens", id);
   });
 
   socket.on("playSong", function (myObject) {
