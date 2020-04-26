@@ -24,8 +24,8 @@ require("dotenv").config();
 // });
 
 let allUsers = [];
+const rooms = {}
 let userName;
-let roomId;
 
 const config = {
   port: process.env.PORT || 3000,
@@ -47,6 +47,9 @@ app
   .get("/setup", setupRoute)
   .get("/join", joinRoute)
   .get("/party-:id", function (req, res) {
+    rooms[req.params.id] = {
+      users: {}
+    }
     const token = req.cookies.accessToken;
     console.log(token);
     Promise.all([
@@ -64,7 +67,6 @@ app
       }).then(response => response.json())
     ]).then(([tracksData, data]) => {
       userName = data.display_name
-      roomId = req.params.id
       res.render("party", {
         title: "Party",
         tracksData: tracksData,
@@ -75,68 +77,112 @@ app
   });
 
 io.on("connection", function (socket) {
-  // socket.emit("getUserName")
-  // socket.on("userName", function (userName) {
-  //   socket.userName = userName
-  //   console.log(socket.userName)
-  // })
-
-  // const user = {
-  //   userName: socket.userName,
-  //   id: socket.id,
-  // };
-  // allUsers.push(user);
-
   socket.userName = userName
-
-  socket.on("join party", function (id) {
-    socket.roomId = id;
-    socket.join(socket.roomId);
-  });
-
-  let clients = io.sockets.clients(socket.roomId);
-  let clientsArr = Object.keys(clients.connected).map(function (key) {
-    return clients.connected[key];
-  });
-  let geusts = clientsArr.map((user) => {
-    return {
-      userName: user.userName,
-      id: user.id
-    };
-  });
-  console.log("users", geusts);
-  let geustsInRoom = geusts.length
-
-  socket.to(socket.roomId).emit("online users", geusts, geustsInRoom);
-  // socket.broadcast.emit("online users", geusts, geustsInRoom);
-
-  socket.on("chat message", function (msg, ranColor) {
-    io.to(socket.roomId).emit("chat message", `${socket.userName}: ${msg}`, ranColor);
-  });
 
   socket.emit(
     "server message",
     "Server: you are connceted open your spotify app to listen to the party music"
   );
-  socket.broadcast.emit(
-    "server message",
-    `Server: ${socket.userName} is connceted`
-  );
-  console.log("a user is connceted");
+
+  socket.on("join party", function (id, name) {
+    rooms[id].users[socket.id] = name
+    socket.roomId = id;
+    socket.join(id);
+    socket.to(id).broadcast.emit(
+      "server message",
+      `Server: ${socket.userName} is connceted`
+    );
+  });
+
+  socket.emit("get users");
+
+  // let clients = io.sockets.clients(socket.roomId);
+  // let clientsArr = Object.keys(clients.connected).map(function (key) {
+  //   return clients.connected[key];
+  // });
+  // let geusts = clientsArr.map((user) => {
+  //   return {
+  //     userName: user.userName,
+  //     id: user.id
+  //   };
+  // });
+  // console.log("users", geusts);
+  // let geustsInRoom = geusts.length
+
+  socket.on("users list", function (room) {
+    let clients = io.in(room).clients((error, clients) => {
+      let geusts = clients.map(client => {
+        return {
+          userName: io.sockets.connected[client].userName,
+          id: io.sockets.connected[client].id
+        }
+      })
+      console.log(geusts)
+      let guestsInRoom = clients.length
+      io.to(room).emit("online users", geusts, guestsInRoom);
+    })
+
+    // console.log(clients)
+    // let clientsArr = Object.keys(clients.connected).map(function (key) {
+    //   return clients.connected[key];
+    // });
+    // let geusts = clientsArr.map((user) => {
+    //   return {
+    //     userName: user.userName,
+    //     id: user.id
+    //   };
+    // });
+    // console.log("users", geusts);
+
+    // var clients = io.in(room)
+    // console.log(clients)
+    // let clientsArr = Object.keys(clients.sockets).forEach(item => {
+    //   console.log("hiiiiiiiiii", clients.sockets[item])
+    // })
+
+
+    // getUserRooms(socket).forEach(room => {
+    //   let leftGuests = geusts
+    //   let lleftGuestsNumber = leftGuests.length
+    //   socket.to(room).emit("online users", leftGuests, lleftGuestsNumber);
+    // })
+    // let clients = io.of(`/party-${room}`).in(room).clients
+  });
+
+  // socket.to(socket.roomId).emit("online users", geusts, geustsInRoom);
+  // socket.broadcast.to(socket.roomId).emit("online users", geusts, geustsInRoom);
+
+  socket.on("chat message", function (msg, ranColor, room) {
+    socket.to(room).broadcast.emit("chat message", `${socket.userName}: ${msg}`, ranColor);
+  });
 
   socket.on("disconnect", function () {
-    console.log("user disconnected");
-    let leftUsers = geusts.filter(item => {
-      return item.id != socket.id
+    getUserRooms(socket).forEach(room => {
+      socket.to(room).broadcast.emit('server message', `Server: ${rooms[room].users[socket.id]} is disconnected`)
+      // let leftUsers = geusts.filter(item => {
+      //   return item.id != socket.id
+      // })
+      // let leftUsersNumber = leftUsers.length
+      // socket.to(room).emit("online users", leftUsers, leftUsersNumber);
+      let clients = io.in(room).clients((error, clients) => {
+        let geusts = clients.map(client => {
+          return {
+            userName: io.sockets.connected[client].userName,
+            id: io.sockets.connected[client].id
+          }
+        })
+        console.log(geusts)
+        let guestsInRoom = clients.length
+        io.to(room).emit("online users", geusts, guestsInRoom);
+      })
+      delete rooms[room].users[socket.id]
     })
-    let leftUsersNumber = leftUsers.length
-    io.emit("server message", `Server: ${socket.userName} is disconnected`);
-    io.emit("online users", leftUsers, leftUsersNumber);
   });
 
-  socket.on("getSong", function (id) {
-    socket.to(socket.roomId).emit("getTokens", id);
+  socket.on("getSong", function (id, room) {
+    socket.to(room).emit("getTokens", id);
   });
+
   socket.on("playSong", function (myObject) {
     console.log("my object is:", myObject);
     // const query = queryString.stringify({
@@ -163,3 +209,10 @@ io.on("connection", function (socket) {
 http.listen(config, function () {
   console.log("listening on *:3000");
 });
+
+function getUserRooms(socket) {
+  return Object.entries(rooms).reduce((names, [name, room]) => {
+    if (room.users[socket.id] != null) names.push(name)
+    return names
+  }, [])
+}
