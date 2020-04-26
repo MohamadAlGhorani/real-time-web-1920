@@ -152,12 +152,13 @@ io.on("connection", function (socket) {
       body: JSON.stringify({
         uris: [`spotify:track:${myObject.id}`],
       }),
-    }).then(async (response) => {
-      const tracksData = await response.json();
-      console.log(tracksData);
-      // if(response.status = 404){alert("no device found")} no device found;
-      // if(response.status = 403){alert("no premium account")}  no premuim account;
-    });
+    })
+    // .then(async (response) => {
+    //   const tracksData = await response.json();
+    //   console.log("My tracksData is:", tracksData);
+    //   // if(response.status = 404){alert("no device found")} no device found;
+    //   // if(response.status = 403){alert("no premium account")}  no premuim account;
+    // });
   });
 });
 
