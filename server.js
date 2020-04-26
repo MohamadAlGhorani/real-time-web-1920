@@ -114,6 +114,35 @@ io.on("connection", function (socket) {
     socket.to(room).broadcast.emit("chat message", `${socket.userName}: ${msg}`, ranColor);
   });
 
+  socket.on("getSong", function (id, room) {
+    socket.to(room).emit("getTokens", id);
+  });
+
+  socket.on("playSong", function (myObject) {
+    console.log("my object is:", myObject);
+    // const query = queryString.stringify({
+    //   uris: ['spotify:track:${myObject.id}']
+    // })
+    fetch(`https://api.spotify.com/v1/me/player/play`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${myObject.accessToken}`,
+        },
+        body: JSON.stringify({
+          uris: [`spotify:track:${myObject.id}`],
+        }),
+      })
+      .then((response) => {
+        // const tracksData = await response.json();
+        console.log("My response is:", response, response.status);
+        // if(response.status = 404){alert("no device found")} no device found;
+        // if(response.status = 403){alert("no premium account")}  no premuim account;
+      }).catch((error) => {
+        console.log(error)
+      });
+  });
+
   socket.on("disconnect", function () {
     getUserRooms(socket).forEach(room => {
       socket.to(room).broadcast.emit('server message', `Server: ${rooms[room].users[socket.id]} is disconnected`)
@@ -134,32 +163,6 @@ io.on("connection", function (socket) {
     })
   });
 
-  socket.on("getSong", function (id, room) {
-    socket.to(room).emit("getTokens", id);
-  });
-
-  socket.on("playSong", function (myObject) {
-    console.log("my object is:", myObject);
-    // const query = queryString.stringify({
-    //   uris: ['spotify:track:${myObject.id}']
-    // })
-    fetch(`https://api.spotify.com/v1/me/player/play`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${myObject.accessToken}`,
-      },
-      body: JSON.stringify({
-        uris: [`spotify:track:${myObject.id}`],
-      }),
-    })
-    // .then(async (response) => {
-    //   const tracksData = await response.json();
-    //   console.log("My tracksData is:", tracksData);
-    //   // if(response.status = 404){alert("no device found")} no device found;
-    //   // if(response.status = 403){alert("no premium account")}  no premuim account;
-    // });
-  });
 });
 
 http.listen(config, function () {

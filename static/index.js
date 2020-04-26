@@ -85,10 +85,6 @@ var form = document.querySelector("#form");
 
 console.log(room, name)
 
-// var idValue = id.value;
-
-// console.log(idValue)
-
 for (btn of btns) {
     btn.addEventListener("click", playSong)
 }
