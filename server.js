@@ -98,15 +98,15 @@ io.on("connection", function (socket) {
 
   socket.on("users list", function (room) {
     let clients = io.in(room).clients((error, clients) => {
-      let geusts = clients.map(client => {
+      let guests = clients.map(client => {
         return {
           userName: io.sockets.connected[client].userName,
           id: io.sockets.connected[client].id
         }
       })
-      console.log(geusts)
+      console.log(guests)
       let guestsInRoom = clients.length
-      io.to(room).emit("online users", geusts, guestsInRoom);
+      io.to(room).emit("online users", guests, guestsInRoom);
     })
   });
 
@@ -116,6 +116,7 @@ io.on("connection", function (socket) {
 
   socket.on("getSong", function (id, room) {
     socket.emit("getTokens", id);
+    socket.to(room).emit("getTokens", id);
   });
 
   socket.on("playSong", function (myObject) {
@@ -147,13 +148,13 @@ io.on("connection", function (socket) {
     getUserRooms(socket).forEach(room => {
       socket.to(room).broadcast.emit('server message', `Server: ${rooms[room].users[socket.id]} is disconnected`)
       let clients = io.in(room).clients((error, clients) => {
-        let geusts = clients.map(client => {
+        let guests = clients.map(client => {
           return {
             userName: io.sockets.connected[client].userName,
             id: io.sockets.connected[client].id
           }
         })
-        let leftUsers = geusts.filter(item => {
+        let leftUsers = guests.filter(item => {
           return item.id != socket.id
         })
         let leftUsersNumber = leftUsers.length
