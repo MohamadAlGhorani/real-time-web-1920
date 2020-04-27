@@ -69,6 +69,12 @@ socket.on("getTokens", function (id) {
     })
 })
 
+socket.on("host", function () {
+    for (btn of btns) {
+        btn.classList.add("play-active")
+    }
+})
+
 socket.on("online users", function (users, usersNumber) {
     console.log("hiii", users)
     console.log(usersNumber)

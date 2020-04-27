@@ -101,9 +101,19 @@ io.on("connection", function (socket) {
       let guests = clients.map(client => {
         return {
           userName: io.sockets.connected[client].userName,
-          id: io.sockets.connected[client].id
+          id: io.sockets.connected[client].id,
+          rights: "guest"
         }
       })
+      if (guests[0]) {
+        guests[0].rights = "host";
+        let hostSocket = guests.filter(item => {
+          return item.rights == "host"
+        })
+        socket.broadcast.to(hostSocket[0].id).emit('host');
+        io.to(hostSocket[0].id).emit('host'); //sending to individual socketid
+        console.log("host:", hostSocket[0].id)
+      }
       console.log(guests)
       let guestsInRoom = clients.length
       io.to(room).emit("online users", guests, guestsInRoom);
@@ -137,8 +147,18 @@ io.on("connection", function (socket) {
       .then((response) => {
         // const tracksData = await response.json();
         console.log("My response is:", response, response.status);
-        // if(response.status = 404){alert("no device found")} no device found;
-        // if(response.status = 403){alert("no premium account")}  no premuim account;
+        if (response.status == 403) {
+          socket.emit(
+            "server message",
+            "Server: You don't have a spotify premium account. You can chat with people but you can't listen to the party music."
+          );
+        }
+        if (response.status == 404) {
+          socket.emit(
+            "server message",
+            "Server: We can't find an active device please open your spotify application on your own device and start a random track to active the session."
+          );
+        }
       }).catch((error) => {
         console.log(error)
       });
@@ -151,12 +171,16 @@ io.on("connection", function (socket) {
         let guests = clients.map(client => {
           return {
             userName: io.sockets.connected[client].userName,
-            id: io.sockets.connected[client].id
+            id: io.sockets.connected[client].id,
+            rights: "guest"
           }
         })
         let leftUsers = guests.filter(item => {
           return item.id != socket.id
         })
+        if (leftUsers[0]) {
+          leftUsers[0].rights = "host";
+        }
         let leftUsersNumber = leftUsers.length
         socket.to(room).emit("online users", leftUsers, leftUsersNumber);
       })
