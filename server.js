@@ -160,9 +160,9 @@ io.on("connection", function (socket) {
           uris: [`spotify:track:${myObject.id}`],
         }),
       })
-      .then((response) => {
+      .then(async (response) => {
         // const tracksData = await response.json();
-        console.log("My response is:", response, response.status);
+        // console.log("My response is:", response, response.status);
         if (response.status == 403) {
           socket.emit(
             "server message",
@@ -175,6 +175,19 @@ io.on("connection", function (socket) {
             "Server: We can't find an active device please open your spotify application on your own device and start a random track to active the session."
           );
         }
+        await fetch(`https://api.spotify.com/v1/me/player`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${myObject.accessToken}`,
+          }
+        }).then(async (response) => {
+          const tracksData = await response.json();
+          console.log(tracksData);
+          socket.emit("current playing", tracksData)
+        }).catch((error) => {
+          console.log(error)
+        });
       }).catch((error) => {
         console.log(error)
       });

@@ -31,9 +31,9 @@
 </header>
 <main>
 <div class="party-container">
-	<div class="chat-container">
+	<div class="chat-container change-size">
 		<ul id="messages"></ul>
-		<form class="message-form" id="form" action="">
+		<form class="message-form change-size" id="form" action="">
 			<input  autocomplete="off" id="m">
 			<input type="submit" value="send">
 		</form>
@@ -50,11 +50,15 @@
 		</div>
 	</div>
 	<div class="userList">
-		<button class="close">Close</button>
-		<span class="users-number"></span>
-		<p class="list-host"></p>
-		<ul>
-		</ul>
+		<div class="userList-header">
+			<button class="close">Close</button>
+			<span class="users-number"></span>
+			<p class="list-host"></p>
+		</div>
+		<div class="users-container">
+			<ul>
+			</ul>
+		</div>
 	</div>
 
 </div>

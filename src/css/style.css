@@ -10,6 +10,10 @@
   display: block;
 }
 
+#messages li {
+  margin-top: .5em;
+}
+
 header {
   position: fixed;
   background-color: white;
@@ -85,47 +89,57 @@ input:focus {
 .userList {
   transition: all 1s ease-in-out;
   background-color: white;
-  padding: 1em;
   position: fixed;
-  width: 23%;
+  width: 26.6%;
   right: 23%;
   top: 0;
-  overflow-y: auto;
   overflow-x: hidden;
   scroll-snap-type: x mandatory;
   -webkit-scroll-snap-destination: 0% 0%;
   -webkit-overflow-scrolling: touch;
-  height: 95.5vh;
+  height: 100vh;
   border-left: 1px solid black;
   z-index: 98;
 }
 
+.userList .users-container {
+  margin: 0;
+  margin-top: 130px;
+  margin-left: 1em;
+}
 
-.userList ul {
+.userList .users-container-host {
+  margin: 0;
+  margin-top: 160px;
+  margin-left: 1em;
+}
+
+.userList .users-container ul {
   margin: 0;
 }
 
 .closed {
   transition: all 1s ease-in-out;
   right: 0;
+  width: 26.6%;
   overflow-y: visible;
   overflow-x: visible;
 }
 
 .users-number {
   border-radius: 50%;
-  border: 1px solid black;
+  border: 1px solid #000;
   text-align: center;
-  width: 50px;
-  margin-top: 1em;
-  line-height: 50px;
+  width: 40px;
+  margin-top: .5em;
+  line-height: 40px;
   display: block;
-  height: 50px;
+  height: 40px;
 }
 
 .n-users {
-  left: -52px;
-  top: 2em;
+  left: -46px;
+  top: 1.5em;
   background-color: white;
   position: absolute;
   z-index: 9999999999999;
@@ -167,7 +181,13 @@ input:focus {
 }
 
 .chat-container {
+  transition: all 1s ease-in-out;
   width: 73%;
+}
+
+.change-size {
+  transition: all 1s ease-in-out;
+  width: 50%;
 }
 
 header h1,
@@ -185,6 +205,7 @@ header h4 {
   -moz-box-shadow: 0px 14px 66px -22px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 14px 66px -22px rgba(0, 0, 0, 0.75);
   background-color: white;
+  border-left: 1px solid black;
   top: 0;
   right: 0;
   margin-top: 0;
@@ -273,9 +294,15 @@ ul li {
 }
 
 .message-form {
+  transition: all 1s ease-in-out;
   width: 73%;
   position: fixed;
   bottom: 0;
+}
+
+.change-size {
+  transition: all 1s ease-in-out;
+  width: 50%;
 }
 
 .message-form input {
@@ -284,6 +311,11 @@ ul li {
   border: 1px solid lightgray;
   padding-left: 1em;
   border-radius: 20px;
+}
+
+.change-size input {
+  transition: all 1s ease-in-out;
+  width: 72%;
 }
 
 .message-form input[type=submit] {
@@ -299,6 +331,21 @@ ul li {
   color: black;
   font-weight: bold;
   background-color: lightgray;
+}
+
+.list-host {
+  width: 90%;
+}
+
+.userList-header {
+  padding: 1em;
+  padding-top: 0.5em;
+  width: 23%;
+  position: fixed;
+  z-index: 999;
+  -webkit-box-shadow: 0px 14px 66px -22px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 14px 66px -22px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 14px 66px -22px rgba(0, 0, 0, 0.75);
 }
 
 @media(max-width:769px) {

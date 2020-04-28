@@ -83,6 +83,8 @@ socket.on("host", function () {
     for (user of usersInList) {
         user.classList.add("li-host")
     }
+    const userList = document.querySelector(".users-container")
+    userList.classList.add("users-container-host")
 })
 
 socket.on("set dj", function () {
@@ -121,16 +123,6 @@ socket.on("online users", function (users, usersNumber) {
         li.setAttribute('data-id', user.id)
         userList.appendChild(li)
     })
-    // const usersInList = document.querySelectorAll(".userList ul li");
-    // if (usersInList && localStorage.getItem("rights")) {
-    //     for (user of usersInList) {
-    //         user.addEventListener("click", function () {
-    //             user.classList.remove("dj")
-    //             this.classList.add("dj")
-    //             socket.emit("setDj")
-    //         })
-    //     }
-    // }
 })
 
 socket.on("update dj", function (id) {
@@ -140,6 +132,10 @@ socket.on("update dj", function (id) {
     }
     let djelement = document.querySelector(`[data-id='${id}']`)
     djelement.classList.add("dj")
+})
+
+socket.on("current playing", function (data) {
+    console.log(data)
 })
 
 function setDj(event) {
