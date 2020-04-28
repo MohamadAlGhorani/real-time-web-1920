@@ -160,7 +160,11 @@ socket.on("host", function () {
         btn.classList.add("play-active")
     }
     const HostList = document.querySelector(".list-host");
-    HostList.textContent = "Click on the user name to make hem the DJ"
+    HostList.textContent = "Choose the DJ from the list by clicking on a user name."
+    const usersInList = document.querySelectorAll(".userList ul li");
+    for (user of usersInList) {
+        user.classList.add("li-host")
+    }
 })
 
 socket.on("set dj", function () {

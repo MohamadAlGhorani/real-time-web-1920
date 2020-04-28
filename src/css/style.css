@@ -53,6 +53,10 @@ input:focus {
   list-style-image: url('icons/guest.png');
 }
 
+.userList .li-host {
+  cursor: pointer;
+}
+
 .userList li:first-of-type {
   list-style-image: url('icons/host.png');
 }
