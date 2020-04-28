@@ -83,6 +83,9 @@ if (box) {
 var randomColor = Math.floor(Math.random() * 16777215).toString(16);
 const btns = document.querySelectorAll(".play-btn");
 
+
+
+
 var socket = io();
 var form = document.querySelector("#form");
 
@@ -152,8 +155,30 @@ socket.on("getTokens", function (id) {
 })
 
 socket.on("host", function () {
+    localStorage.setItem("rights", "host");
     for (btn of btns) {
         btn.classList.add("play-active")
+    }
+    const HostList = document.querySelector(".list-host");
+    HostList.textContent = "Click on the user name to make hem the DJ"
+})
+
+socket.on("set dj", function () {
+    for (btn of btns) {
+        btn.classList.add("play-active")
+    }
+})
+
+socket.on("get dj", function () {
+    const usersInList = document.querySelectorAll(".userList ul li");
+    for (user of usersInList) {
+        user.addEventListener("click", setDj)
+    }
+})
+
+socket.on("delete dj", function () {
+    for (btn of btns) {
+        btn.classList.remove("play-active")
     }
 })
 
@@ -174,4 +199,30 @@ socket.on("online users", function (users, usersNumber) {
         li.setAttribute('data-id', user.id)
         userList.appendChild(li)
     })
+    // const usersInList = document.querySelectorAll(".userList ul li");
+    // if (usersInList && localStorage.getItem("rights")) {
+    //     for (user of usersInList) {
+    //         user.addEventListener("click", function () {
+    //             user.classList.remove("dj")
+    //             this.classList.add("dj")
+    //             socket.emit("setDj")
+    //         })
+    //     }
+    // }
 })
+
+socket.on("update dj", function (id) {
+    const usersInList = document.querySelectorAll(".userList ul li");
+    for (user of usersInList) {
+        user.classList.remove("dj")
+    }
+    let djelement = document.querySelector(`[data-id='${id}']`)
+    djelement.classList.add("dj")
+})
+
+function setDj(event) {
+    console.log(event.target)
+    const userId = event.target.dataset.id;
+    console.log(userId)
+    socket.emit("dj", userId, room)
+}

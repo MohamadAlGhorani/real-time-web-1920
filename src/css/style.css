@@ -47,6 +47,20 @@ input:focus {
   right: 60%;
 }
 
+
+
+.userList li {
+  list-style-image: url('icons/guest.png');
+}
+
+.userList li:first-of-type {
+  list-style-image: url('icons/host.png');
+}
+
+.userList .dj {
+  list-style-image: url('icons/dj.png');
+}
+
 .tracks-container {
   background-color: white;
   z-index: 99;

@@ -107,17 +107,27 @@ io.on("connection", function (socket) {
       })
       if (guests[0]) {
         guests[0].rights = "host";
-        let hostSocket = guests.filter(item => {
-          return item.rights == "host"
-        })
-        socket.broadcast.to(hostSocket[0].id).emit('host');
-        io.to(hostSocket[0].id).emit('host'); //sending to individual socketid
-        console.log("host:", hostSocket[0].id)
       }
       console.log(guests)
       let guestsInRoom = clients.length
       io.to(room).emit("online users", guests, guestsInRoom);
+      if (guests[0]) {
+        let hostSocket = guests.filter(item => {
+          return item.rights == "host"
+        })
+        socket.broadcast.to(hostSocket[0].id).emit('host', hostSocket[0].id);
+        io.to(hostSocket[0].id).emit('host', hostSocket[0].id); //sending to individual socketid
+        socket.broadcast.to(hostSocket[0].id).emit('get dj');
+        io.to(hostSocket[0].id).emit('get dj'); //sending to individual socketid
+      }
     })
+  });
+  socket.on("dj", function (userId, room) {
+    socket.broadcast.emit('update dj', userId);
+    socket.emit('update dj', userId);
+    socket.broadcast.emit('delete dj');
+    socket.broadcast.to(userId).emit('set dj');
+    io.to(userId).emit('set dj');
   });
 
   socket.on("chat message", function (msg, ranColor, room) {
