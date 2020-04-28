@@ -227,6 +227,7 @@ socket.on("update dj", function (id) {
 function setDj(event) {
     console.log(event.target)
     const userId = event.target.dataset.id;
+    const userName = event.target.textContent;
     console.log(userId)
-    socket.emit("dj", userId, room)
+    socket.emit("dj", userId, room, userName)
 }

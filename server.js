@@ -122,12 +122,18 @@ io.on("connection", function (socket) {
       }
     })
   });
-  socket.on("dj", function (userId, room) {
-    socket.broadcast.emit('update dj', userId);
+  socket.on("dj", function (userId, room, userName) {
+    socket.to(room).broadcast.emit('update dj', userId);
     socket.emit('update dj', userId);
-    socket.broadcast.emit('delete dj');
+
+    socket.to(room).emit('server message', `Server: ${userName} is the new DJ`);
+    socket.emit('server message', `Server: ${userName} is the new DJ`);
+
+    socket.to(room).broadcast.emit('delete dj');
+
     socket.broadcast.to(userId).emit('set dj');
-    io.to(userId).emit('set dj');
+
+    socket.broadcast.to(userId).emit('server message', 'Server: You are the DJ now enjoy');
   });
 
   socket.on("chat message", function (msg, ranColor, room) {
