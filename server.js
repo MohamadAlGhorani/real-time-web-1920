@@ -130,6 +130,7 @@ io.on("connection", function (socket) {
         playlistsData.items.forEach(item => {
           if (item.id == room) {
             socket.emit('host', socket.id);
+            socket.broadcast.emit("set host icon", socket.id)
             socket.emit('get dj');
           }
         })

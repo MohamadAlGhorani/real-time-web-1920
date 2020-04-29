@@ -178,6 +178,11 @@ socket.on("host", function (id) {
     hostElement.classList.add('host')
 })
 
+socket.on("set host icon", function (id) {
+    let hostElement = document.querySelector(`[data-id='${id}']`)
+    hostElement.classList.add('host')
+})
+
 socket.on("set dj", function () {
     for (btn of btns) {
         btn.classList.add("play-active")
