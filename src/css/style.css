@@ -61,13 +61,13 @@ input:focus {
   cursor: pointer;
 }
 
-/* .userList li:first-of-type {
-  list-style-image: url('icons/host.png');
-} */
-
-.userList .host {
+.userList li:first-of-type {
   list-style-image: url('icons/host.png');
 }
+
+/* .userList .host {
+  list-style-image: url('icons/host.png');
+} */
 
 .userList .dj {
   list-style-image: url('icons/dj.png');
