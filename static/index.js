@@ -174,14 +174,24 @@ socket.on("host", function (id) {
     }
     const userList = document.querySelector(".users-container")
     userList.classList.add("users-container-host")
-    let hostElement = document.querySelector(`[data-id='${id}']`)
-    hostElement.classList.add('host')
+    // let hostElement = document.querySelector(`[data-id='${id}']`)
+    // hostElement.classList.add('host')
 })
 
-socket.on("set host icon", function (id) {
-    let hostElement = document.querySelector(`[data-id='${id}']`)
-    hostElement.classList.add('host')
-})
+// socket.on("set host icon", function (id) {
+//     let hostElement = document.querySelector(`[data-id='${id}']`)
+//     hostElement.classList.add('host')
+// })
+
+// socket.on("who host", function (id) {
+//     let hostElement = document.querySelector(`[data-id='${id}']`)
+//     hostElement.classList.add('host')
+// })
+
+// socket.on("who dj", function (id) {
+//     let djElement = document.querySelector(`[data-id='${id}']`)
+//     djElement.classList.add('dj')
+// })
 
 socket.on("set dj", function () {
     for (btn of btns) {
