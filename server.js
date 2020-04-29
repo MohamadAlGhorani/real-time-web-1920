@@ -129,9 +129,13 @@ io.on("connection", function (socket) {
         console.log(playlistsData)
         playlistsData.items.forEach(item => {
           if (item.id == room) {
-            socket.emit('host', socket.id);
+            // socket.emit('host', socket.id);
             socket.broadcast.emit("set host icon", socket.id)
-            socket.emit('get dj');
+            // socket.emit('get dj');
+            socket.broadcast.to(socket.id).emit('host', socket.id);
+            io.to(socket.id).emit('host', socket.id); //sending to individual socketid
+            socket.broadcast.to(socket.id).emit('get dj');
+            io.to(socket.id).emit('get dj'); //sending to individual socketid
           }
         })
       });
