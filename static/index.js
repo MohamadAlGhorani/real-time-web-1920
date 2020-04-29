@@ -161,7 +161,7 @@ socket.on("getTokens", function (id) {
     })
 })
 
-socket.on("host", function () {
+socket.on("host", function (id) {
     localStorage.setItem("rights", "host");
     for (btn of btns) {
         btn.classList.add("play-active")
@@ -174,6 +174,8 @@ socket.on("host", function () {
     }
     const userList = document.querySelector(".users-container")
     userList.classList.add("users-container-host")
+    let hostElement = document.querySelector(`[data-id='${id}']`)
+    hostElement.classList.add('host')
 })
 
 socket.on("set dj", function () {

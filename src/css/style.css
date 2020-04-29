@@ -61,7 +61,7 @@ input:focus {
   cursor: pointer;
 }
 
-.userList li:first-of-type {
+.userList .host {
   list-style-image: url('icons/host.png');
 }
 
