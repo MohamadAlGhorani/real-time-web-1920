@@ -97,6 +97,21 @@ io.on("connection", function (socket) {
   socket.emit("get users");
 
   socket.on("users list", function (room, token) {
+    let clients = io.in(room).clients((error, clients) => {
+      let guests = clients.map(client => {
+        return {
+          userName: io.sockets.connected[client].userName,
+          id: io.sockets.connected[client].id,
+          rights: "guest"
+        }
+      })
+      if (guests[0]) {
+        guests[0].rights = "host";
+      }
+      console.log(guests)
+      let guestsInRoom = clients.length
+      io.to(room).emit("online users", guests, guestsInRoom);
+    })
     fetch("https://api.spotify.com/v1/me", {
       headers: {
         'Content-Type': 'application/json',
@@ -114,21 +129,6 @@ io.on("connection", function (socket) {
         console.log(playlistsData)
         playlistsData.items.forEach(item => {
           if (item.id == room) {
-            let clients = io.in(room).clients((error, clients) => {
-              let guests = clients.map(client => {
-                return {
-                  userName: io.sockets.connected[client].userName,
-                  id: io.sockets.connected[client].id,
-                  rights: "guest"
-                }
-              })
-              if (guests[0]) {
-                guests[0].rights = "host";
-              }
-              console.log(guests)
-              let guestsInRoom = clients.length
-              io.to(room).emit("online users", guests, guestsInRoom);
-            })
             socket.emit('host', socket.id);
             socket.emit('get dj');
           }
