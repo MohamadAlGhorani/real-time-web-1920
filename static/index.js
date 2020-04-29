@@ -134,7 +134,10 @@ if (form) {
         li.scrollIntoView();
     });
     socket.on("get users", function () {
-        socket.emit("users list", room);
+        const accessToken = document.cookie.split(";").find(item => {
+            return item.includes("accessToken")
+        }).split("=")[1].trim()
+        socket.emit("users list", room, accessToken);
     });
 }
 socket.on("chat message", function (msg, ranColor) {
