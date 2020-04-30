@@ -20,7 +20,8 @@ require("dotenv").config();
 
 mongoose
   .connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
   })
   .then(() => {
     console.log("connecetion successfull");
