@@ -60,7 +60,13 @@ app
   .get("/home", homeRoute)
   .get("/setup", setupRoute)
   .get("/join", joinRoute)
-  .get("/party-:id", async function (req, res) {
+  .get("/party-:id", function (req, res) {
+    // try {
+    //   await partyServices.getIfExists(req.params.id)
+    // } catch {
+    partyServices.create(req.params.id)
+    // }
+
     rooms[req.params.id] = {
       users: {},
     };
@@ -89,11 +95,6 @@ app
         id: req.params.id,
       });
     });
-    try {
-      await partyServices.getIfExists(req.params.id)
-    } catch {
-      partyServices.create(req.params.id)
-    }
   });
 
 io.on("connection", function (socket) {
