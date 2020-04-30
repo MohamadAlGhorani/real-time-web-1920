@@ -1,5 +1,6 @@
 * {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 .play-btn {
@@ -11,7 +12,7 @@
 }
 
 #messages li {
-  margin-top: .5em;
+  margin-top: 0.5em;
 }
 
 header {
@@ -51,26 +52,24 @@ input:focus {
   right: 60%;
 }
 
-
-
 .userList li {
-  list-style-image: url('icons/guest.png');
+  list-style-image: url("icons/guest.png");
 }
 
 .userList .li-host {
   cursor: pointer;
 }
 
-.userList li:first-of-type {
-  list-style-image: url('icons/host.png');
-}
-
-/* .userList .host {
-  list-style-image: url('icons/host.png');
+/* .userList li:first-of-type {
+  list-style-image: url("icons/host.png");
 } */
 
+.userList .host {
+  list-style-image: url("icons/host.png");
+}
+
 .userList .dj {
-  list-style-image: url('icons/dj.png');
+  list-style-image: url("icons/dj.png");
 }
 
 .tracks-container {
@@ -135,7 +134,7 @@ input:focus {
   border: 1px solid #000;
   text-align: center;
   width: 40px;
-  margin-top: .5em;
+  margin-top: 0.5em;
   line-height: 40px;
   display: block;
   height: 40px;
@@ -147,7 +146,6 @@ input:focus {
   background-color: white;
   position: absolute;
   z-index: 9999999999999;
-
 }
 
 .pik {
@@ -253,7 +251,7 @@ header h4 {
 .inlog-form fieldset,
 .join-form fieldset,
 .create-form fieldset {
-  border: none
+  border: none;
 }
 
 .inlog-form legend,
@@ -262,9 +260,9 @@ header h4 {
   padding-left: 0;
 }
 
-.inlog-form input[type=submit],
-.join-form input[type=submit],
-.create-form input[type=submit] {
+.inlog-form input[type="submit"],
+.join-form input[type="submit"],
+.create-form input[type="submit"] {
   display: block;
   margin: 0 auto;
   height: 2.6em;
@@ -276,17 +274,16 @@ header h4 {
   border-radius: 20px;
 }
 
-.inlog-form input[type=text],
-.join-form input[type=text],
-.create-form input[type=text] {
+.inlog-form input[type="text"],
+.join-form input[type="text"],
+.create-form input[type="text"] {
   width: 100%;
-  margin-top: .5em;
+  margin-top: 0.5em;
   border: 1px solid lightgray;
   height: 3em;
   padding-left: 1em;
   border-radius: 20px;
 }
-
 
 ul {
   margin-bottom: 3em;
@@ -322,7 +319,7 @@ ul li {
   width: 72%;
 }
 
-.message-form input[type=submit] {
+.message-form input[type="submit"] {
   width: 23%;
   height: 2.6em;
   font-size: 14px;
@@ -352,8 +349,8 @@ ul li {
   box-shadow: 0px 14px 66px -22px rgba(0, 0, 0, 0.75);
 }
 
-@media(max-width:769px) {
-  .message-form input[type=submit] {
+@media (max-width: 769px) {
+  .message-form input[type="submit"] {
     width: 20%;
   }
 

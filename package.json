@@ -37,6 +37,7 @@
     "cookie-parser": "^1.4.5",
     "ejs": "^2.6.1",
     "express": "^4.17.1",
+    "mongoose": "^5.9.10",
     "node-fetch": "^2.6.0",
     "node-gyp": "^6.1.0",
     "nodemon": "^2.0.2",
