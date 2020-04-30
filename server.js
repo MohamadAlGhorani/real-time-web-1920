@@ -61,13 +61,6 @@ app
   .get("/setup", setupRoute)
   .get("/join", joinRoute)
   .get("/party-:id", async function (req, res) {
-    try {
-      await partyServices.getIfExists(req.params.id)
-
-    } catch {
-      partyServices.create(req.params.id)
-    }
-
     rooms[req.params.id] = {
       users: {},
     };
@@ -96,6 +89,11 @@ app
         id: req.params.id,
       });
     });
+    try {
+      await partyServices.getIfExists(req.params.id)
+    } catch {
+      partyServices.create(req.params.id)
+    }
   });
 
 io.on("connection", function (socket) {
@@ -204,7 +202,6 @@ io.on("connection", function (socket) {
   });
 
   socket.on("dj", function (userId, room, userName) {
-    // rooms[room].djId = userId;
     partyServices.setDjId(room, userId).then(function () {
 
       socket.to(room).broadcast.emit("update dj", userId);
