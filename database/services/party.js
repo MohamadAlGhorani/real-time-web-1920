@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Party = require('../models/room');
+const Party = require('../models/party');
 
 exports.getIfExists = async (partyId) => {
     try {

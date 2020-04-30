@@ -4,7 +4,7 @@ const {
     model
 } = require("mongoose");
 
-const roomSchema = new Schema({
+const partySchema = new Schema({
     _id: ObjectId,
     partyId: {
         type: String,
@@ -28,4 +28,4 @@ const roomSchema = new Schema({
     }
 })
 
-module.exports = model("Room", roomSchema)
+module.exports = model("Party", partySchema)
