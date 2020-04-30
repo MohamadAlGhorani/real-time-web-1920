@@ -174,8 +174,8 @@ socket.on("host", function (id) {
     }
     const userList = document.querySelector(".users-container")
     userList.classList.add("users-container-host")
-    let hostElement = document.querySelector(`[data-id='${id}']`)
-    hostElement.classList.add('host')
+    // let hostElement = document.querySelector(`[data-id='${id}']`)
+    // hostElement.classList.add('host')
 })
 
 socket.on("set host icon", function (id) {
