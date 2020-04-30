@@ -13,7 +13,8 @@ exports.getIfExists = async (partyId) => {
 
         throw `Party with id ${partyId} not found.`;
     } catch (error) {
-        throw new Error(error);
+        // throw new Error(error);
+        return null
     }
 }
 

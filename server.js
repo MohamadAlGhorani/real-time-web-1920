@@ -60,13 +60,10 @@ app
   .get("/home", homeRoute)
   .get("/setup", setupRoute)
   .get("/join", joinRoute)
-  .get("/party-:id", async function (req, res) {
-    try {
-      await partyServices.getIfExists(req.params.id)
-    } catch {
+  .get("/party-:id", function (req, res) {
+    partyServices.getIfExists(req.params.id).catch(function () {
       partyServices.create(req.params.id)
-    }
-
+    })
     rooms[req.params.id] = {
       users: {},
     };
