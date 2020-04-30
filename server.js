@@ -44,7 +44,6 @@ const config = {
   port: process.env.PORT || 3000,
 };
 
-// console.log(mongoose)
 app
   .set("view engine", "ejs")
   .set("views", "views")
@@ -61,9 +60,11 @@ app
   .get("/setup", setupRoute)
   .get("/join", joinRoute)
   .get("/party-:id", function (req, res) {
+
     partyServices.getIfExists(req.params.id).catch(function () {
       partyServices.create(req.params.id)
     })
+
     rooms[req.params.id] = {
       users: {},
     };
