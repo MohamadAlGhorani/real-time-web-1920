@@ -164,8 +164,12 @@ io.on("connection", function (socket) {
           } else {
             const hostID = partyServices.getHostId(room).then(function () {
               const djId = partyServices.getDjId(room).then(function () {
-                socket.emit("who host", hostID)
-                socket.emit("who dj", djId)
+                if (hostID != '') {
+                  socket.emit("who host", hostID)
+                }
+                if (djId != '') {
+                  socket.emit("who dj", djId)
+                }
               })
             })
           }
