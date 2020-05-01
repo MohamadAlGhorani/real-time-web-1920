@@ -130,6 +130,73 @@ io.on("connection", function (socket) {
       let guestsInRoom = clients.length
       io.to(room).emit("online users", guests, guestsInRoom);
     })
+    // fetch("https://api.spotify.com/v1/me", {
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // }).then(async response => {
+    //   const data = await response.json();
+    //   fetch(`https://api.spotify.com/v1/users/${data.id}/playlists`, {
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       Authorization: `Bearer ${token}`,
+    //     }
+    //   }).then(async response => {
+    //     const playlistsData = await response.json();
+    //     console.log(playlistsData)
+    //     playlistsData.items.forEach(item => {
+    //       if (item.id == room) {
+    //         partyServices.setHostId(room, socket.id).then(function () {
+    //           socket.to(room).broadcast.emit("set host icon", socket.id)
+    //           socket.broadcast.to(socket.id).emit('host', socket.id);
+    //           io.to(socket.id).emit('host', socket.id); //sending to individual socketid
+    //           socket.broadcast.to(socket.id).emit('get dj');
+    //           io.to(socket.id).emit('get dj'); //sending to individual socketid
+    //         })
+    //       } else {
+    //         const hostID = partyServices.getHostId(room).then(function () {
+    //           const djId = partyServices.getDjId(room).then(function () {
+    //             if (hostID != '') {
+    //               socket.to(socket.id).emit("who host", hostID)
+    //             }
+    //             if (djId != '') {
+    //               socket.to(socket.id).emit("who dj", djId)
+    //             }
+    //           })
+    //         })
+    //       }
+    //     })
+    //   });
+    // })
+
+    // let clients = io.in(room).clients((error, clients) => {
+    //   let guests = clients.map((client) => {
+    //     return {
+    //       userName: io.sockets.connected[client].userName,
+    //       id: io.sockets.connected[client].id,
+    //       rights: "guest",
+    //     };
+    //   });
+    //   if (guests[0]) {
+    //     guests[0].rights = "host";
+    //   }
+    //   console.log(guests);
+    //   let guestsInRoom = clients.length;
+    //   io.to(room).emit("online users", guests, guestsInRoom);
+    //   if (guests[0]) {
+    //     let hostSocket = guests.filter((item) => {
+    //       return item.rights == "host";
+    //     });
+    //     socket.broadcast.to(hostSocket[0].id).emit("host", hostSocket[0].id);
+    //     io.to(hostSocket[0].id).emit("host", hostSocket[0].id); //sending to individual socketid
+    //     socket.broadcast.to(hostSocket[0].id).emit("get dj");
+    //     io.to(hostSocket[0].id).emit("get dj"); //sending to individual socketid
+    //   }
+    // });
+  });
+
+  socket.on("rights", function (room, token) {
     fetch("https://api.spotify.com/v1/me", {
       headers: {
         'Content-Type': 'application/json',
@@ -169,32 +236,7 @@ io.on("connection", function (socket) {
         })
       });
     })
-
-    // let clients = io.in(room).clients((error, clients) => {
-    //   let guests = clients.map((client) => {
-    //     return {
-    //       userName: io.sockets.connected[client].userName,
-    //       id: io.sockets.connected[client].id,
-    //       rights: "guest",
-    //     };
-    //   });
-    //   if (guests[0]) {
-    //     guests[0].rights = "host";
-    //   }
-    //   console.log(guests);
-    //   let guestsInRoom = clients.length;
-    //   io.to(room).emit("online users", guests, guestsInRoom);
-    //   if (guests[0]) {
-    //     let hostSocket = guests.filter((item) => {
-    //       return item.rights == "host";
-    //     });
-    //     socket.broadcast.to(hostSocket[0].id).emit("host", hostSocket[0].id);
-    //     io.to(hostSocket[0].id).emit("host", hostSocket[0].id); //sending to individual socketid
-    //     socket.broadcast.to(hostSocket[0].id).emit("get dj");
-    //     io.to(hostSocket[0].id).emit("get dj"); //sending to individual socketid
-    //   }
-    // });
-  });
+  })
 
   socket.on("dj", function (userId, room, userName) {
     partyServices.setDjId(room, userId).then(function () {

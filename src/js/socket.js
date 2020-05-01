@@ -48,6 +48,7 @@ if (form) {
         li.scrollIntoView();
     });
     socket.on("get users", function () {
+        console.log("get users is emited")
         const accessToken = document.cookie.split(";").find(item => {
             return item.includes("accessToken")
         }).split("=")[1].trim()
@@ -145,6 +146,10 @@ socket.on("online users", function (users, usersNumber) {
         li.setAttribute('data-id', user.id)
         userList.appendChild(li)
     })
+    const accessToken = document.cookie.split(";").find(item => {
+        return item.includes("accessToken")
+    }).split("=")[1].trim()
+    socket.emit("rights", room, accessToken)
 })
 
 socket.on("update dj", function (id) {
