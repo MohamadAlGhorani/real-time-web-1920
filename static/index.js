@@ -86,7 +86,8 @@ if (box) {
 */
 var randomColor = Math.floor(Math.random() * 16777215).toString(16);
 const btns = document.querySelectorAll(".play-btn");
-
+const volume = document.getElementById("volume")
+const volumeLabel = document.querySelector("label.dj-volume")
 
 
 
@@ -94,6 +95,15 @@ var socket = io();
 var form = document.querySelector("#form");
 
 // console.log(room, name)
+
+volume.addEventListener("change", function () {
+    const accessToken = document.cookie.split(";").find(item => {
+        return item.includes("accessToken")
+    }).split("=")[1].trim()
+    let value = volume.value;
+    console.log(value)
+    socket.emit("set volume", value, accessToken)
+})
 
 for (btn of btns) {
     btn.addEventListener("click", playSong)
@@ -167,6 +177,8 @@ socket.on("host", function (id) {
     for (btn of btns) {
         btn.classList.add("play-active")
     }
+    volume.classList.add("play-active")
+    volumeLabel.classList.add("play-active")
     const HostList = document.querySelector(".list-host");
     HostList.textContent = "Choose the DJ from the list by clicking on a user name."
     const usersInList = document.querySelectorAll(".userList ul li");
@@ -200,6 +212,8 @@ socket.on("set dj", function () {
     for (btn of btns) {
         btn.classList.add("play-active")
     }
+    volume.classList.add("play-active")
+    volumeLabel.classList.add("play-active")
 })
 
 socket.on("get dj", function () {
@@ -249,6 +263,13 @@ socket.on("update dj", function (id) {
 
 socket.on("current playing", function (data) {
     console.log(data)
+    const container = document.querySelector(".playlist-footer")
+    const img = document.createElement("img")
+    img.src = data.item.album.images[0].url
+    const p = document.createElement('p')
+    p.textContent = data.item.name
+    container.appendChild(img)
+    container.appendChild(p)
 })
 
 function setDj(event) {

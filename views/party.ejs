@@ -23,7 +23,6 @@
 	<h1>Party 2020</h1>
 <div>
 <h2>Hello <span class="user-name"><%- name %></span></h2>
-<h3>Chat with people</h3>
 <h4>The Party code is: <input readonly class="id" type="text" value="<%- id %>"><button class="copy">Copy</button></h4>
 <p>Share this code with your guests so they can join</p>
 <div id="lights" ></div>
@@ -39,7 +38,11 @@
 		</form>
 	</div>
 	<div class="tracks-container">
-		<h3 class="playlist-head">Playlist for this party</h3>
+		<div class="playlist-head">
+			<h3>Playlist for this party</h3>
+			<label class="dj-volume" for="volume">Volume</label>
+			<input class="dj-volume" id="volume" type="range" min="0" max="100">
+		</div>
 		<div class="audio-container">
 			<% tracksData.items.forEach(function(track) { %>
 				<div>
@@ -48,6 +51,7 @@
 				</div>
 			<% }) %>
 		</div>
+		<div class="playlist-footer"></div>
 	</div>
 	<div class="userList">
 		<div class="userList-header">
