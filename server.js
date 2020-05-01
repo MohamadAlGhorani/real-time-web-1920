@@ -148,11 +148,7 @@ io.on("connection", function (socket) {
         playlistsData.items.forEach(item => {
           if (item.id == room) {
             partyServices.setHostId(room, socket.id).then(function () {
-              // rooms[room].hostId = socket.id
-              console.log(rooms)
-              // socket.emit('host', socket.id);
-              socket.broadcast.emit("set host icon", socket.id)
-              // socket.emit('get dj');
+              socket.to(room).broadcast.emit("set host icon", socket.id)
               socket.broadcast.to(socket.id).emit('host', socket.id);
               io.to(socket.id).emit('host', socket.id); //sending to individual socketid
               socket.broadcast.to(socket.id).emit('get dj');
@@ -162,10 +158,10 @@ io.on("connection", function (socket) {
             const hostID = partyServices.getHostId(room).then(function () {
               const djId = partyServices.getDjId(room).then(function () {
                 if (hostID != '') {
-                  socket.emit("who host", hostID)
+                  socket.to(socket.id).emit("who host", hostID)
                 }
                 if (djId != '') {
-                  socket.emit("who dj", djId)
+                  socket.to(socket.id).emit("who dj", djId)
                 }
               })
             })
