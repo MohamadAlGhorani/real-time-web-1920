@@ -193,20 +193,12 @@ socket.on("update dj", function (id) {
 socket.on("current playing", function (data) {
     console.log(data)
     const container = document.querySelector(".playlist-footer")
-    Array.from(container.children).map(item => {
-        item.remove();
-    });
-    const title = document.createElement("h4")
-    title.textContent = "Current playing"
-    const div = document.createElement("div")
     const img = document.createElement("img")
     img.src = data.item.album.images[0].url
     const p = document.createElement('p')
     p.textContent = data.item.name
-    div.appendChild(img)
-    div.appendChild(p)
-    container.appendChild(title)
-    container.appendChild(div)
+    container.appendChild(img)
+    container.appendChild(p)
 })
 
 function setDj(event) {
