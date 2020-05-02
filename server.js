@@ -174,6 +174,9 @@ io.on("connection", function (socket) {
                     uris: [`spotify:track:${currentTrack}`],
                     position_ms: trackPosition
                   }),
+                }).then(async (response) => {
+                  const tracksData = await response.json();
+                  socket.emit("current playing", tracksData);
                 })
               })
             })
