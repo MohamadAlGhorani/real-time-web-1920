@@ -176,6 +176,7 @@ io.on("connection", function (socket) {
                     }).then(async (response) => {
                       const tracksData = await response.json();
                       socket.to(socket.id).emit("current playing", tracksData);
+                      socket.to(socket.id).emit("console log", tracksData)
                     })
                   })
                 })
@@ -273,7 +274,7 @@ io.on("connection", function (socket) {
             "Server: We can't find an active device please open your spotify application on your own device and start a random track to active the session."
           );
         }
-        await fetch(`https://api.spotify.com/v1/me/player`, {
+        await fetch(`https://api.spotify.com/v1/me/player/currently-playing`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",

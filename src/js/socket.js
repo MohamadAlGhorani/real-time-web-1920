@@ -58,6 +58,10 @@ if (form) {
         return false;
     });
 
+    socket.on("console log", function (data) {
+        console.log(data)
+    })
+
     socket.on("server message", function (msg) {
         var ul = document.querySelector("#messages");
         var li = document.createElement("li");
