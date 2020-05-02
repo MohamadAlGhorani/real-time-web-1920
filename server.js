@@ -153,10 +153,10 @@ io.on("connection", function (socket) {
             })
           } else {
             const hostID = partyServices.getHostId(room).then(function () {
-              io.to(hostID).emit("getPosition")
               const djId = partyServices.getDjId(room).then(function () {
                 if (hostID != '') {
                   socket.to(socket.id).emit("who host", hostID)
+                  socket.to(hostID).emit("getPosition")
                 }
                 if (djId != '') {
                   socket.to(socket.id).emit("who dj", djId)
