@@ -160,24 +160,24 @@ io.on("connection", function (socket) {
                 if (djId != '') {
                   socket.to(socket.id).emit("who dj", djId)
                 }
-                const currentTrack = partyServices.getCurrentTrack(room).then(function () {
-                  const trackPosition = partyServices.getTrackPosition(room).then(function () {
-                    fetch(`https://api.spotify.com/v1/me/player/play`, {
-                      method: "PUT",
-                      headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                      },
-                      body: JSON.stringify({
-                        uris: [`spotify:track:${currentTrack}`],
-                        position_ms: trackPosition
-                      }),
-                    }).then(async (response) => {
-                      const tracksData = await response.json();
-                      socket.to(socket.id).emit("current playing", tracksData);
-                    })
-                  })
-                })
+                // const currentTrack = partyServices.getCurrentTrack(room).then(function () {
+                //   const trackPosition = partyServices.getTrackPosition(room).then(function () {
+                //     fetch(`https://api.spotify.com/v1/me/player/play`, {
+                //       method: "PUT",
+                //       headers: {
+                //         "Content-Type": "application/json",
+                //         Authorization: `Bearer ${token}`,
+                //       },
+                //       body: JSON.stringify({
+                //         uris: [`spotify:track:${currentTrack}`],
+                //         position_ms: trackPosition
+                //       }),
+                //     }).then(async (response) => {
+                //       const tracksData = await response.json();
+                //       socket.to(socket.id).emit("current playing", tracksData);
+                //     })
+                //   })
+                // })
               })
             })
           }
