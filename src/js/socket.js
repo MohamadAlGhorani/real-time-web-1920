@@ -29,11 +29,14 @@ function playSong(event) {
     const songId = event.target.dataset.id;
     // console.log(songId)
     socket.emit("getSong", songId, room)
+}
+
+socket.on("getPosition", function () {
     const accessToken = document.cookie.split(";").find(item => {
         return item.includes("accessToken")
     }).split("=")[1].trim()
-    // socket.emit("getPosition", room, accessToken)
-}
+    socket.emit("setPosition", room, accessToken)
+})
 
 if (form) {
     socket.emit("join party", room, name);
@@ -147,6 +150,7 @@ socket.on("delete dj", function () {
     for (btn of btns) {
         btn.classList.remove("play-active")
     }
+    volumeLabel.classList.remove("play-active")
 })
 
 socket.on("online users", function (users, usersNumber) {

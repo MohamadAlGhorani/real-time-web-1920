@@ -160,24 +160,25 @@ io.on("connection", function (socket) {
                 if (djId != '') {
                   socket.to(socket.id).emit("who dj", djId)
                 }
-                // const currentTrack = partyServices.getCurrentTrack(room).then(function () {
-                //   const trackPosition = partyServices.getTrackPosition(room).then(function () {
-                //     fetch(`https://api.spotify.com/v1/me/player/play`, {
-                //       method: "PUT",
-                //       headers: {
-                //         "Content-Type": "application/json",
-                //         Authorization: `Bearer ${token}`,
-                //       },
-                //       body: JSON.stringify({
-                //         uris: [`spotify:track:${currentTrack}`],
-                //         position_ms: trackPosition
-                //       }),
-                //     }).then(async (response) => {
-                //       const tracksData = await response.json();
-                //       socket.to(socket.id).emit("current playing", tracksData);
-                //     })
-                //   })
-                // })
+                socket.to(hostID).emit("getPosition")
+                const currentTrack = partyServices.getCurrentTrack(room).then(function () {
+                  const trackPosition = partyServices.getTrackPosition(room).then(function () {
+                    fetch(`https://api.spotify.com/v1/me/player/play`, {
+                      method: "PUT",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                      },
+                      body: JSON.stringify({
+                        uris: [`spotify:track:${currentTrack}`],
+                        position_ms: trackPosition
+                      }),
+                    }).then(async (response) => {
+                      const tracksData = await response.json();
+                      socket.to(socket.id).emit("current playing", tracksData);
+                    })
+                  })
+                })
               })
             })
           }
@@ -229,20 +230,18 @@ io.on("connection", function (socket) {
     })
   })
 
-  // socket.on("getPosition", function (room, token) {
-  //   setInterval(() => {
-  //     fetch(`https://api.spotify.com/v1/me/player/currently-playing`, {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     }).then(async (response) => {
-  //       const positionData = await response.json();
-  //       partyServices.setTrackPosition(room, positionData.progress_ms)
-  //     })
-  //   }, 1000);
-  // })
+  socket.on("setPosition", function (room, token) {
+    fetch(`https://api.spotify.com/v1/me/player/currently-playing`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }).then(async (response) => {
+      const positionData = await response.json();
+      partyServices.setTrackPosition(room, positionData.progress_ms)
+    })
+  })
 
   socket.on("playSong", function (myObject) {
     // console.log("my object is:", myObject);
