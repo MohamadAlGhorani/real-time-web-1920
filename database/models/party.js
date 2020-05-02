@@ -25,10 +25,6 @@ const partySchema = new Schema({
     currentTrack: {
         type: String,
         default: ''
-    },
-    trackPosition: {
-        type: Number,
-        default: ''
     }
 })
 

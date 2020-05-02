@@ -3,6 +3,7 @@ const compression = require("compression");
 const fetch = require("node-fetch");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
+// const SpotifyWebApi = require("spotify-web-api-node");
 const app = express();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
@@ -28,6 +29,11 @@ mongoose
   .catch((error) => {
     console.log(error);
   });
+// var spotifyApi = new SpotifyWebApi({
+//   clientId: process.env.SPOTIFY_CLIENT_ID,
+//   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+//   redirectUri: process.env.SPOTIFY_REDIRECT_URI
+// });
 
 const rooms = {};
 let userName;
@@ -64,7 +70,7 @@ app
     };
 
     const token = req.cookies.accessToken;
-    // console.log(token);
+    console.log(token);
     Promise.all([
       fetch(`https://api.spotify.com/v1/playlists/${req.params.id}/tracks`, {
         headers: {
@@ -122,7 +128,7 @@ io.on("connection", function (socket) {
         }
       })
       let guestsInRoom = clients.length
-      io.to(socket.id).emit("online users", guests, guestsInRoom);
+      io.to(room).emit("online users", guests, guestsInRoom);
     })
   });
 
@@ -141,7 +147,7 @@ io.on("connection", function (socket) {
         }
       }).then(async response => {
         const playlistsData = await response.json();
-        // console.log(playlistsData)
+        console.log(playlistsData)
         playlistsData.items.forEach(item => {
           if (item.id == room) {
             partyServices.setHostId(room, socket.id).then(function () {
@@ -153,7 +159,6 @@ io.on("connection", function (socket) {
             })
           } else {
             const hostID = partyServices.getHostId(room).then(function () {
-              io.to(hostID).emit("getPosition")
               const djId = partyServices.getDjId(room).then(function () {
                 if (hostID != '') {
                   socket.to(socket.id).emit("who host", hostID)
@@ -161,27 +166,6 @@ io.on("connection", function (socket) {
                 if (djId != '') {
                   socket.to(socket.id).emit("who dj", djId)
                 }
-                // const currentTrack = partyServices.getCurrentTrack(room).then(function () {
-                //   const trackPosition = partyServices.getTrackPosition(room).then(function () {
-                //   console.log(currentTrack)
-                //   fetch(`https://api.spotify.com/v1/me/player/play`, {
-                //     method: "PUT",
-                //     headers: {
-                //       "Content-Type": "application/json",
-                //       Authorization: `Bearer ${token}`,
-                //     },
-                //     body: JSON.stringify({
-                //       uris: [`spotify:track:${currentTrack}`],
-                //       position_ms: trackPosition
-                //     }),
-                //   }).then(async (response) => {
-                //     const tracksData = await response.json();
-                //     socket.to(socket.id).emit("current playing", tracksData);
-                //     socket.to(socket.id).emit("console log", tracksData)
-                //     socket.to(hostID).emit("console log", tracksData)
-                //   })
-                //   })
-                // })
               })
             })
           }
@@ -192,6 +176,7 @@ io.on("connection", function (socket) {
 
   socket.on("dj", function (userId, room, userName) {
     partyServices.setDjId(room, userId).then(function () {
+
       socket.to(room).broadcast.emit("update dj", userId);
       socket.emit("update dj", userId);
 
@@ -201,8 +186,12 @@ io.on("connection", function (socket) {
       socket.to(room).broadcast.emit("delete dj");
 
       socket.broadcast.to(userId).emit("set dj");
-      socket.broadcast.to(userId).emit("server message", "Server: You are the DJ now enjoy");
+
+      socket.broadcast
+        .to(userId)
+        .emit("server message", "Server: You are the DJ now enjoy");
     })
+
   });
 
   socket.on("chat message", function (msg, ranColor, room) {
@@ -228,22 +217,8 @@ io.on("connection", function (socket) {
     })
   })
 
-  // socket.on("setPosition", function (room, token) {
-  //   fetch(`https://api.spotify.com/v1/me/player/currently-playing`, {
-  //     method: "GET",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   }).then(async (response) => {
-  //     const positionData = await response.json();
-  //     console.log(positionData)
-  //     partyServices.setTrackPosition(room, positionData.progress_ms)
-  //   })
-  // })
-
   socket.on("playSong", function (myObject) {
-    // console.log("my object is:", myObject);
+    console.log("my object is:", myObject);
     // const query = queryString.stringify({
     //   uris: ['spotify:track:${myObject.id}']
     // })
@@ -272,7 +247,7 @@ io.on("connection", function (socket) {
             "Server: We can't find an active device please open your spotify application on your own device and start a random track to active the session."
           );
         }
-        await fetch(`https://api.spotify.com/v1/me/player/currently-playing`, {
+        await fetch(`https://api.spotify.com/v1/me/player`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -281,7 +256,7 @@ io.on("connection", function (socket) {
           })
           .then(async (response) => {
             const tracksData = await response.json();
-            // console.log(tracksData);
+            console.log(tracksData);
             partyServices.setCurrentTrack(myObject.room, tracksData.item.id).then(function () {
               socket.emit("current playing", tracksData);
               socket.to(myObject.room).broadcast.emit("current playing", tracksData);

@@ -9,16 +9,15 @@ var socket = io();
 var form = document.querySelector("#form");
 
 // console.log(room, name)
-if (volume) {
-    volume.addEventListener("change", function () {
-        const accessToken = document.cookie.split(";").find(item => {
-            return item.includes("accessToken")
-        }).split("=")[1].trim()
-        let value = volume.value;
-        // console.log(value)
-        socket.emit("set volume", value, accessToken)
-    })
-}
+
+volume.addEventListener("change", function () {
+    const accessToken = document.cookie.split(";").find(item => {
+        return item.includes("accessToken")
+    }).split("=")[1].trim()
+    let value = volume.value;
+    console.log(value)
+    socket.emit("set volume", value, accessToken)
+})
 
 for (btn of btns) {
     btn.addEventListener("click", playSong)
@@ -30,15 +29,6 @@ function playSong(event) {
     // console.log(songId)
     socket.emit("getSong", songId, room)
 }
-
-socket.on("getPosition", function () {
-    console.log("getting position")
-    // const accessToken = document.cookie.split(";").find(item => {
-    //     return item.includes("accessToken")
-    // }).split("=")[1].trim()
-    // socket.emit("setPosition", room, accessToken)
-})
-
 if (form) {
     socket.emit("join party", room, name);
     form.addEventListener("submit", function (e) {
@@ -59,10 +49,6 @@ if (form) {
         return false;
     });
 
-    socket.on("console log", function (data) {
-        console.log(data)
-    })
-
     socket.on("server message", function (msg) {
         var ul = document.querySelector("#messages");
         var li = document.createElement("li");
@@ -72,7 +58,7 @@ if (form) {
         li.scrollIntoView();
     });
     socket.on("get users", function () {
-        // console.log("get users is emited")
+        console.log("get users is emited")
         const accessToken = document.cookie.split(";").find(item => {
             return item.includes("accessToken")
         }).split("=")[1].trim()
@@ -155,21 +141,20 @@ socket.on("delete dj", function () {
     for (btn of btns) {
         btn.classList.remove("play-active")
     }
-    volumeLabel.classList.remove("play-active")
 })
 
 socket.on("online users", function (users, usersNumber) {
-    // console.log("hiii", users)
-    // console.log(usersNumber)
+    console.log("hiii", users)
+    console.log(usersNumber)
     var userList = document.querySelector(".userList ul")
     var NumOfUsers = document.querySelector(".users-number")
     NumOfUsers.textContent = usersNumber
-    // console.dir(userList)
+    console.dir(userList)
     Array.from(userList.children).map(item => {
         item.remove()
     })
     users.map(user => {
-        // console.log(user)
+        console.log(user)
         var li = document.createElement("li")
         li.textContent = user.userName
         li.setAttribute('data-id', user.id)
@@ -193,18 +178,26 @@ socket.on("update dj", function (id) {
 socket.on("current playing", function (data) {
     console.log(data)
     const container = document.querySelector(".playlist-footer")
+    Array.from(container.children).map(item => {
+        item.remove();
+    });
+    const title = document.createElement("h4")
+    title.textContent = "Current playing"
+    const div = document.createElement("div")
     const img = document.createElement("img")
     img.src = data.item.album.images[0].url
     const p = document.createElement('p')
     p.textContent = data.item.name
-    container.appendChild(img)
-    container.appendChild(p)
+    div.appendChild(img)
+    div.appendChild(p)
+    container.appendChild(title)
+    container.appendChild(div)
 })
 
 function setDj(event) {
-    // console.log(event.target)
+    console.log(event.target)
     const userId = event.target.dataset.id;
     const userName = event.target.textContent;
-    // console.log(userId)
+    console.log(userId)
     socket.emit("dj", userId, room, userName)
 }
