@@ -9,15 +9,16 @@ var socket = io();
 var form = document.querySelector("#form");
 
 // console.log(room, name)
-
-volume.addEventListener("change", function () {
-    const accessToken = document.cookie.split(";").find(item => {
-        return item.includes("accessToken")
-    }).split("=")[1].trim()
-    let value = volume.value;
-    console.log(value)
-    socket.emit("set volume", value, accessToken)
-})
+if (volume) {
+    volume.addEventListener("change", function () {
+        const accessToken = document.cookie.split(";").find(item => {
+            return item.includes("accessToken")
+        }).split("=")[1].trim()
+        let value = volume.value;
+        // console.log(value)
+        socket.emit("set volume", value, accessToken)
+    })
+}
 
 for (btn of btns) {
     btn.addEventListener("click", playSong)
@@ -28,7 +29,12 @@ function playSong(event) {
     const songId = event.target.dataset.id;
     // console.log(songId)
     socket.emit("getSong", songId, room)
+    const accessToken = document.cookie.split(";").find(item => {
+        return item.includes("accessToken")
+    }).split("=")[1].trim()
+    socket.emit("getPosition", room, accessToken)
 }
+
 if (form) {
     socket.emit("join party", room, name);
     form.addEventListener("submit", function (e) {
@@ -58,7 +64,7 @@ if (form) {
         li.scrollIntoView();
     });
     socket.on("get users", function () {
-        console.log("get users is emited")
+        // console.log("get users is emited")
         const accessToken = document.cookie.split(";").find(item => {
             return item.includes("accessToken")
         }).split("=")[1].trim()
@@ -144,17 +150,17 @@ socket.on("delete dj", function () {
 })
 
 socket.on("online users", function (users, usersNumber) {
-    console.log("hiii", users)
-    console.log(usersNumber)
+    // console.log("hiii", users)
+    // console.log(usersNumber)
     var userList = document.querySelector(".userList ul")
     var NumOfUsers = document.querySelector(".users-number")
     NumOfUsers.textContent = usersNumber
-    console.dir(userList)
+    // console.dir(userList)
     Array.from(userList.children).map(item => {
         item.remove()
     })
     users.map(user => {
-        console.log(user)
+        // console.log(user)
         var li = document.createElement("li")
         li.textContent = user.userName
         li.setAttribute('data-id', user.id)
@@ -195,9 +201,9 @@ socket.on("current playing", function (data) {
 })
 
 function setDj(event) {
-    console.log(event.target)
+    // console.log(event.target)
     const userId = event.target.dataset.id;
     const userName = event.target.textContent;
-    console.log(userId)
+    // console.log(userId)
     socket.emit("dj", userId, room, userName)
 }

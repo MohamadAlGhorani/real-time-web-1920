@@ -3,7 +3,6 @@ const compression = require("compression");
 const fetch = require("node-fetch");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
-// const SpotifyWebApi = require("spotify-web-api-node");
 const app = express();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
@@ -29,11 +28,6 @@ mongoose
   .catch((error) => {
     console.log(error);
   });
-// var spotifyApi = new SpotifyWebApi({
-//   clientId: process.env.SPOTIFY_CLIENT_ID,
-//   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-//   redirectUri: process.env.SPOTIFY_REDIRECT_URI
-// });
 
 const rooms = {};
 let userName;
@@ -70,7 +64,7 @@ app
     };
 
     const token = req.cookies.accessToken;
-    console.log(token);
+    // console.log(token);
     Promise.all([
       fetch(`https://api.spotify.com/v1/playlists/${req.params.id}/tracks`, {
         headers: {
@@ -147,7 +141,7 @@ io.on("connection", function (socket) {
         }
       }).then(async response => {
         const playlistsData = await response.json();
-        console.log(playlistsData)
+        // console.log(playlistsData)
         playlistsData.items.forEach(item => {
           if (item.id == room) {
             partyServices.setHostId(room, socket.id).then(function () {
@@ -166,6 +160,21 @@ io.on("connection", function (socket) {
                 if (djId != '') {
                   socket.to(socket.id).emit("who dj", djId)
                 }
+              })
+            })
+            const currentTrack = partyServices.getCurrentTrack(room).then(function () {
+              const trackPosition = partyServices.getTrackPosition.then(function () {
+                fetch(`https://api.spotify.com/v1/me/player/play`, {
+                  method: "PUT",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                  },
+                  body: JSON.stringify({
+                    uris: [`spotify:track:${currentTrack}`],
+                    position_ms: trackPosition
+                  }),
+                })
               })
             })
           }
@@ -217,8 +226,23 @@ io.on("connection", function (socket) {
     })
   })
 
+  socket.on("getPosition", function (room, token) {
+    setInterval(() => {
+      fetch(`https://api.spotify.com/v1/me/player/currently-playing`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }).then(async (response) => {
+        const positionData = await response.json();
+        partyServices.setTrackPosition(room, positionData.progress_ms)
+      })
+    }, 100);
+  })
+
   socket.on("playSong", function (myObject) {
-    console.log("my object is:", myObject);
+    // console.log("my object is:", myObject);
     // const query = queryString.stringify({
     //   uris: ['spotify:track:${myObject.id}']
     // })
@@ -256,7 +280,7 @@ io.on("connection", function (socket) {
           })
           .then(async (response) => {
             const tracksData = await response.json();
-            console.log(tracksData);
+            // console.log(tracksData);
             partyServices.setCurrentTrack(myObject.room, tracksData.item.id).then(function () {
               socket.emit("current playing", tracksData);
               socket.to(myObject.room).broadcast.emit("current playing", tracksData);

@@ -2,7 +2,7 @@ const fetch = require("node-fetch");
 
 module.exports = function (req, res) {
     const token = req.cookies.accessToken;
-    console.log(token);
+    // console.log(token);
     fetch("https://api.spotify.com/v1/me", {
         headers: {
             'Content-Type': 'application/json',
@@ -17,7 +17,7 @@ module.exports = function (req, res) {
             }
         }).then(async response => {
             const playlistsData = await response.json();
-            console.log(playlistsData)
+            // console.log(playlistsData)
             res.render("setup", {
                 title: "Setup",
                 playlistsData: playlistsData,

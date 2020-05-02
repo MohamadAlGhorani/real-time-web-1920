@@ -163,6 +163,22 @@ exports.setCurrentTrack = async (partyId, currentTrack) => {
     }
 }
 
+exports.setTrackPosition = async (partyId, trackPosition) => {
+    try {
+        const party = await Party.findOne({
+            partyId
+        });
+
+        if (party) {
+            party.trackPosition = trackPosition
+        }
+
+        await party.save();
+    } catch (error) {
+        return null
+    }
+}
+
 exports.getHostId = async (partyId) => {
     try {
         const party = await Party.findOne({
@@ -203,6 +219,21 @@ exports.getCurrentTrack = async (partyId) => {
         if (party) {
             const currentTrack = party.currentTrack
             return currentTrack;
+        }
+    } catch (error) {
+        return null
+    }
+}
+
+exports.getTrackPosition = async (partyId) => {
+    try {
+        const party = await Party.findOne({
+            partyId
+        });
+
+        if (party) {
+            const trackPosition = party.trackPosition
+            return trackPosition;
         }
     } catch (error) {
         return null
