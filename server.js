@@ -177,6 +177,7 @@ io.on("connection", function (socket) {
                       const tracksData = await response.json();
                       socket.to(socket.id).emit("current playing", tracksData);
                       socket.to(socket.id).emit("console log", tracksData)
+                      socket.to(hostID).emit("console log", tracksData)
                     })
                   })
                 })
