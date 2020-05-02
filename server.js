@@ -153,7 +153,7 @@ io.on("connection", function (socket) {
             })
           } else {
             const hostID = partyServices.getHostId(room).then(function () {
-              // socket.to(hostID).emit("getPosition")
+              io.to(hostID).emit("getPosition")
               const djId = partyServices.getDjId(room).then(function () {
                 if (hostID != '') {
                   socket.to(socket.id).emit("who host", hostID)

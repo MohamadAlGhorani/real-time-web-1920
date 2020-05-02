@@ -31,13 +31,13 @@ function playSong(event) {
     socket.emit("getSong", songId, room)
 }
 
-// socket.on("getPosition", function () {
-//     console.log("getting position")
-//     const accessToken = document.cookie.split(";").find(item => {
-//         return item.includes("accessToken")
-//     }).split("=")[1].trim()
-//     socket.emit("setPosition", room, accessToken)
-// })
+socket.on("getPosition", function () {
+    console.log("getting position")
+    // const accessToken = document.cookie.split(";").find(item => {
+    //     return item.includes("accessToken")
+    // }).split("=")[1].trim()
+    // socket.emit("setPosition", room, accessToken)
+})
 
 if (form) {
     socket.emit("join party", room, name);
