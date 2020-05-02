@@ -163,7 +163,7 @@ io.on("connection", function (socket) {
               })
             })
             const currentTrack = partyServices.getCurrentTrack(room).then(function () {
-              const trackPosition = partyServices.getTrackPosition.then(function () {
+              const trackPosition = partyServices.getTrackPosition(room).then(function () {
                 fetch(`https://api.spotify.com/v1/me/player/play`, {
                   method: "PUT",
                   headers: {
