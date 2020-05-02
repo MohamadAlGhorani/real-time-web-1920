@@ -153,6 +153,7 @@ io.on("connection", function (socket) {
             })
           } else {
             const hostID = partyServices.getHostId(room).then(function () {
+              socket.to(hostID).emit("getPosition")
               const djId = partyServices.getDjId(room).then(function () {
                 if (hostID != '') {
                   socket.to(socket.id).emit("who host", hostID)
@@ -160,7 +161,6 @@ io.on("connection", function (socket) {
                 if (djId != '') {
                   socket.to(socket.id).emit("who dj", djId)
                 }
-                socket.to(hostID).emit("getPosition")
                 const currentTrack = partyServices.getCurrentTrack(room).then(function () {
                   const trackPosition = partyServices.getTrackPosition(room).then(function () {
                     fetch(`https://api.spotify.com/v1/me/player/play`, {
@@ -171,7 +171,7 @@ io.on("connection", function (socket) {
                       },
                       body: JSON.stringify({
                         uris: [`spotify:track:${currentTrack}`],
-                        position_ms: trackPosition
+                        position_ms: Number(trackPosition)
                       }),
                     }).then(async (response) => {
                       const tracksData = await response.json();
