@@ -229,20 +229,20 @@ io.on("connection", function (socket) {
     })
   })
 
-  socket.on("getPosition", function (room, token) {
-    setInterval(() => {
-      fetch(`https://api.spotify.com/v1/me/player/currently-playing`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }).then(async (response) => {
-        const positionData = await response.json();
-        partyServices.setTrackPosition(room, positionData.progress_ms)
-      })
-    }, 100);
-  })
+  // socket.on("getPosition", function (room, token) {
+  //   setInterval(() => {
+  //     fetch(`https://api.spotify.com/v1/me/player/currently-playing`, {
+  //       method: "GET",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     }).then(async (response) => {
+  //       const positionData = await response.json();
+  //       partyServices.setTrackPosition(room, positionData.progress_ms)
+  //     })
+  //   }, 1000);
+  // })
 
   socket.on("playSong", function (myObject) {
     // console.log("my object is:", myObject);

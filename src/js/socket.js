@@ -32,7 +32,7 @@ function playSong(event) {
     const accessToken = document.cookie.split(";").find(item => {
         return item.includes("accessToken")
     }).split("=")[1].trim()
-    socket.emit("getPosition", room, accessToken)
+    // socket.emit("getPosition", room, accessToken)
 }
 
 if (form) {
