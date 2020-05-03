@@ -130,14 +130,10 @@ io.on("connection", function (socket) {
       io.to(room).emit("online users", guests, guestsInRoom);
     })
     const hostID = partyServices.getHostId(room).then(function () {
-      if (hostID != '') {
-        socket.to(socket.id).emit("who host", hostID)
-      }
+      socket.to(socket.id).emit("who host", hostID)
     })
     const djId = partyServices.getDjId(room).then(function () {
-      if (djId != '') {
-        socket.to(socket.id).emit("who dj", djId)
-      }
+      socket.to(socket.id).emit("who dj", djId)
     })
   });
 

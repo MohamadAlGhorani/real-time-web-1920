@@ -198,12 +198,16 @@ socket.on("set host icon", function (id) {
 })
 
 socket.on("who host", function (id) {
-    Console.log("getting host")
+    Console.log("before host find")
     let hostElement = document.querySelector(`[data-id='${id}']`)
-    hostElement.classList.add('host')
+    if (hostElement) {
+        Console.log("getting host")
+        hostElement.classList.add('host')
+    }
 })
 
 socket.on("who dj", function (id) {
+    Console.log("before dj find")
     let djElement = document.querySelector(`[data-id='${id}']`)
     if (djElement) {
         console.log("getting dj")
