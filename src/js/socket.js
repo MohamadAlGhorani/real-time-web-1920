@@ -9,15 +9,16 @@ var socket = io();
 var form = document.querySelector("#form");
 
 // console.log(room, name)
-
-volume.addEventListener("change", function () {
-    const accessToken = document.cookie.split(";").find(item => {
-        return item.includes("accessToken")
-    }).split("=")[1].trim()
-    let value = volume.value;
-    console.log(value)
-    socket.emit("set volume", value, accessToken)
-})
+if (volume) {
+    volume.addEventListener("change", function () {
+        const accessToken = document.cookie.split(";").find(item => {
+            return item.includes("accessToken")
+        }).split("=")[1].trim()
+        let value = volume.value;
+        console.log(value)
+        socket.emit("set volume", value, accessToken)
+    })
+}
 
 for (btn of btns) {
     btn.addEventListener("click", playSong)
@@ -111,13 +112,15 @@ socket.on("set host icon", function (id) {
 })
 
 socket.on("who host", function (id) {
+    Console.log("getting host")
     let hostElement = document.querySelector(`[data-id='${id}']`)
     hostElement.classList.add('host')
 })
 
 socket.on("who dj", function (id) {
-    if (id) {
-        let djElement = document.querySelector(`[data-id='${id}']`)
+    let djElement = document.querySelector(`[data-id='${id}']`)
+    if (djElement) {
+        console.log("getting dj")
         djElement.classList.add('dj')
     }
 })
