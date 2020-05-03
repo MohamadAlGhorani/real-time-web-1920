@@ -114,6 +114,10 @@ io.on("connection", function (socket) {
           "server message",
           `Server: ${socket.userName} is connceted`
         );
+      const hostID = partyServices.getHostId(id)
+      hostID.then(function (results) {
+        socket.to(results).emit("getPosition")
+      })
       socket.emit("get users");
     })
   });
@@ -160,7 +164,7 @@ io.on("connection", function (socket) {
             const hostID = partyServices.getHostId(room)
             hostID.then(function (results) {
               console.log(results)
-              socket.to(results).emit("getPosition")
+              // socket.to(results).emit("getPosition")
               socket.emit("who host", results)
             })
             const djId = partyServices.getDjId(room)
@@ -184,8 +188,21 @@ io.on("connection", function (socket) {
                     position_ms: position
                   }),
                 }).then(async (response) => {
-                  const tracksData = await response.json();
-                  socket.emit("current playing", tracksData);
+                  fetch(`https://api.spotify.com/v1/me/player/currently-playing`, {
+                      method: "GET",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${myObject.accessToken}`,
+                      },
+                    })
+                    .then(async (response) => {
+                      const tracksData = await response.json();
+                      console.log(tracksData);
+                      socket.emit("current playing", tracksData);
+                    })
+                    .catch((error) => {
+                      console.log(error);
+                    });
                 })
               })
             })
@@ -282,7 +299,7 @@ io.on("connection", function (socket) {
             "Server: We can't find an active device please open your spotify application on your own device and start a random track to active the session."
           );
         }
-        await fetch(`https://api.spotify.com/v1/me/player`, {
+        await fetch(`https://api.spotify.com/v1/me/player/currently-playing`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
