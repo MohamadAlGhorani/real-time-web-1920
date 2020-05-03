@@ -194,7 +194,7 @@ io.on("connection", function (socket) {
                   method: "GET",
                   headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${myObject.accessToken}`,
+                    Authorization: `Bearer ${token}`,
                   },
                 })
                 .then(async (response) => {
