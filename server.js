@@ -116,16 +116,6 @@ io.on("connection", function (socket) {
         );
       socket.emit("get users");
     })
-    const hostID = partyServices.getHostId(id).then(function () {
-      if (hostID != '') {
-        socket.to(socket.id).emit("who host", hostID)
-      }
-    })
-    const djId = partyServices.getDjId(id).then(function () {
-      if (djId != '') {
-        socket.to(socket.id).emit("who dj", djId)
-      }
-    })
   });
 
   socket.on("users list", function (room, token) {
@@ -138,6 +128,16 @@ io.on("connection", function (socket) {
       })
       let guestsInRoom = clients.length
       io.to(room).emit("online users", guests, guestsInRoom);
+    })
+    const hostID = partyServices.getHostId(id).then(function () {
+      if (hostID != '') {
+        socket.to(socket.id).emit("who host", hostID)
+      }
+    })
+    const djId = partyServices.getDjId(id).then(function () {
+      if (djId != '') {
+        socket.to(socket.id).emit("who dj", djId)
+      }
     })
   });
 
@@ -166,7 +166,7 @@ io.on("connection", function (socket) {
               socket.broadcast.to(socket.id).emit('get dj');
               io.to(socket.id).emit('get dj'); //sending to individual socketid
             })
-          } else {}
+          }
         })
       });
     })
