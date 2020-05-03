@@ -3,6 +3,10 @@
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
+.playlist-btn {
+  display: none;
+}
+
 .play-btn {
   display: none;
 }
@@ -403,5 +407,99 @@ ul li {
   .join-form,
   .create-form {
     width: 266px;
+  }
+  .party-container  {
+    display: block;
+  }
+
+  .change-size {
+    width: 100%;
+  }
+
+  .playlist-container a p {
+    margin: 20px auto;
+  }
+  .tracks-container  {
+    top: -100%;
+    width: 92%;
+    transition: all 1s ease-in-out;
+  }
+
+  .userList  {
+    width: 100%;
+    right: -100%;
+    z-index: 9999;
+  }
+
+  .userList-header  {
+    width: 100%;
+  }
+
+  .users-number {
+    position: absolute;
+    width: 40px;
+    left: -51px;
+    background-color: white;
+    top: 2em;
+  }
+  .n-users {
+    position: static;
+    display: block;
+    width: 40px;
+    left: 0;
+    z-index: 999;
+  }
+  .close  {
+    position: absolute;
+    left: -52px;
+    background-color: white;
+  }
+
+  .pik {
+    position: static;
+    left: 0;
+  }
+  .copy {
+    background-color: white;
+  }
+  .closed  {
+    transition: all 1s ease-in-out;
+    right: 0 !important;
+  }
+  .playlist-head  {
+    width: 92%;
+    top: -100%;
+    transition: all 1s ease-in-out;
+  }
+
+  .playlist-footer  {
+    width: 92%;
+    bottom: 100%;
+    transition: all 1s ease-in-out;
+  }
+
+  header {
+    padding-left: 1em;
+  }
+
+  .playlist-btn {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 1rem;
+    background-color: white;
+    z-index: 999;
+  }
+  .playlist-mobile-header {
+    top: 0;
+    transition: all 1s ease-in-out;
+  }
+  .playlist-mobile-footer {
+    bottom: 0;
+    transition: all 1s ease-in-out;
+  }
+  .playlist-mobile-container {
+    top: 0;
+    transition: all 1s ease-in-out;
   }
 }

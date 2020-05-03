@@ -8,14 +8,29 @@ if (closeBtn) {
 }
 
 function closeList() {
-    if (closeBtn.textContent == "Close") {
-        closeBtn.textContent = "Geusts"
-    } else if (closeBtn.textContent == "Geusts") {
-        closeBtn.textContent = "Close"
-    }
     chatAria.classList.toggle("change-size")
     ChatForm.classList.toggle("change-size")
     List.classList.toggle("closed")
     closeBtn.classList.toggle("pik")
     number.classList.toggle("n-users")
+}
+
+const closePlaylistBtn = document.querySelector(".playlist-btn")
+const playHeader = document.querySelector(".playlist-head")
+const playfooter = document.querySelector(".playlist-footer")
+const playlistContainer = document.querySelector(".tracks-container")
+
+if (closePlaylistBtn) {
+    closePlaylistBtn.addEventListener("click", closePlay)
+}
+
+function closePlay() {
+    if (closePlaylistBtn.textContent == "Playlist") {
+        closePlaylistBtn.textContent = "Close"
+    } else if (closePlaylistBtn.textContent == "Close") {
+        closePlaylistBtn.textContent = "Playlist"
+    }
+    playHeader.classList.toggle("playlist-mobile-header")
+    playfooter.classList.toggle("playlist-mobile-footer")
+    playlistContainer.classList.toggle("playlist-mobile-container")
 }
