@@ -8,14 +8,12 @@ const volumeLabel = document.querySelector("label.dj-volume")
 var socket = io();
 var form = document.querySelector("#form");
 
-// console.log(room, name)
 if (volume) {
     volume.addEventListener("change", function () {
         const accessToken = document.cookie.split(";").find(item => {
             return item.includes("accessToken")
         }).split("=")[1].trim()
         let value = volume.value;
-        console.log(value)
         socket.emit("set volume", value, accessToken)
     })
 }
@@ -25,9 +23,7 @@ for (btn of btns) {
 }
 
 function playSong(event) {
-    // console.log(event.target)
     const songId = event.target.dataset.id;
-    // console.log(songId)
     socket.emit("getSong", songId, room)
 }
 if (form) {
@@ -59,7 +55,6 @@ if (form) {
         li.scrollIntoView();
     });
     socket.on("get users", function () {
-        console.log("get users is emited")
         const accessToken = document.cookie.split(";").find(item => {
             return item.includes("accessToken")
         }).split("=")[1].trim()
@@ -77,7 +72,6 @@ socket.on("chat message", function (msg, ranColor) {
 });
 
 socket.on("getPosition", function () {
-    console.log("getting position")
     const accessToken = document.cookie.split(";").find(item => {
         return item.includes("accessToken")
     }).split("=")[1].trim()
@@ -120,19 +114,15 @@ socket.on("set host icon", function (id) {
 })
 
 socket.on("who host", function (id) {
-    console.log("before host find")
     let hostElement = document.querySelector(`[data-id='${id}']`)
     if (hostElement) {
-        console.log("getting host")
         hostElement.classList.add('host')
     }
 })
 
 socket.on("who dj", function (id) {
-    console.log("before dj find")
     let djElement = document.querySelector(`[data-id='${id}']`)
     if (djElement) {
-        console.log("getting dj")
         djElement.classList.add('dj')
     }
 })
@@ -159,17 +149,13 @@ socket.on("delete dj", function () {
 })
 
 socket.on("online users", function (users, usersNumber) {
-    console.log("hiii", users)
-    console.log(usersNumber)
     var userList = document.querySelector(".userList ul")
     var NumOfUsers = document.querySelector(".users-number")
     NumOfUsers.textContent = usersNumber
-    console.dir(userList)
     Array.from(userList.children).map(item => {
         item.remove()
     })
     users.map(user => {
-        console.log(user)
         var li = document.createElement("li")
         li.textContent = user.userName
         li.setAttribute('data-id', user.id)
@@ -191,7 +177,6 @@ socket.on("update dj", function (id) {
 })
 
 socket.on("current playing", function (data) {
-    console.log(data)
     const container = document.querySelector(".playlist-footer")
     Array.from(container.children).map(item => {
         item.remove();
@@ -210,9 +195,7 @@ socket.on("current playing", function (data) {
 })
 
 function setDj(event) {
-    console.log(event.target)
     const userId = event.target.dataset.id;
     const userName = event.target.textContent;
-    console.log(userId)
     socket.emit("dj", userId, room, userName)
 }
