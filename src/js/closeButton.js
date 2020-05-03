@@ -8,6 +8,11 @@ if (closeBtn) {
 }
 
 function closeList() {
+    if (closeBtn.textContent == "Guests") {
+        closeBtn.textContent = "Close"
+    } else if (closeBtn.textContent == "Close") {
+        closeBtn.textContent = "Guests"
+    }
     chatAria.classList.toggle("change-size")
     ChatForm.classList.toggle("change-size")
     List.classList.toggle("closed")

@@ -355,6 +355,7 @@ ul li {
   border: 1px solid lightgray;
   padding-left: 1em;
   border-radius: 20px;
+  font-size: 12px;
 }
 
 .change-size input {
@@ -401,6 +402,7 @@ ul li {
 
   .message-form input {
     width: 73%;
+    font-size: 12px;
   }
 
   .inlog-form,
@@ -421,72 +423,87 @@ ul li {
   }
   .tracks-container  {
     top: calc(var(--vh, 1vh) * 100);
-    width: 92%;
+    width: 100%;
+    padding: 0;
+    padding-bottom: 1em;
+    padding-top: 1em;
     transition: all 1s ease-in-out;
     height: 100vh;
     height: calc(var(--vh, 1vh) * 100);
   }
 
-  .userList  {
+  /* .userList  {
     width: 100%;
     right: -100%;
     z-index: 9999;
     height: 100vh;
     height: calc(var(--vh, 1vh) * 100);
-  }
+  } */
 
-  .userList-header  {
+  /* .userList-header  {
     width: 100%;
     z-index: 99999999999999;
-  }
+  } */
 
-  .users-number {
+  /* .users-number {
     position: absolute;
     width: 40px;
     left: -51px;
     background-color: white;
     top: 2em;
     z-index: 999999999;
-  }
-  .n-users {
+  } */
+  /* .n-users {
     position: static;
     display: block;
     width: 40px;
     left: 0;
     z-index: 999;
-  }
-  .close  {
+  } */
+  /* .close  {
     position: absolute;
     left: -52px;
     background-color: white;
     z-index: 999999999;
-  }
+  } */
 
-  .pik {
+  /* .pik {
     position: static;
     left: 0;
-  }
+  } */
   .copy {
     background-color: white;
   }
-  .closed  {
+  /* .closed  {
     transition: all 1s ease-in-out;
     right: 0 !important;
-  }
+  } */
   .playlist-head  {
-    width: 92%;
+    width: 100%;
+    padding: 0;
+    padding-bottom: 1em;
+    padding-top: 1em;
     top: -100%;
     transition: all 1s ease-in-out;
   }
+  .playlist-head * {
+    padding-left: 1em;
+  }
+  .audio-container {
+    padding-left: 1em;
+  }
 
   .playlist-footer  {
-    width: 92%;
+    width: 100%;
+    padding: 0;
+    padding-bottom: 1em;
+    padding-top: 1em;
     bottom: 100%;
     transition: all 1s ease-in-out;
   }
 
   header {
-    padding-left: 1em;
+    padding-left: 0.5em;
   }
 
   .playlist-btn {
