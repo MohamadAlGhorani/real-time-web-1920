@@ -420,15 +420,19 @@ ul li {
     margin: 20px auto;
   }
   .tracks-container  {
-    top: -100%;
+    top: calc(var(--vh, 1vh) * 100);
     width: 92%;
     transition: all 1s ease-in-out;
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
   }
 
   .userList  {
     width: 100%;
     right: -100%;
     z-index: 9999;
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
   }
 
   .userList-header  {
