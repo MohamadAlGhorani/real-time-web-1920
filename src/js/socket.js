@@ -76,6 +76,14 @@ socket.on("chat message", function (msg, ranColor) {
     li.scrollIntoView();
 });
 
+socket.on("getPosition", function () {
+    console.log("getting position")
+    const accessToken = document.cookie.split(";").find(item => {
+        return item.includes("accessToken")
+    }).split("=")[1].trim()
+    socket.emit("setPosition", room, accessToken)
+})
+
 socket.on("getTokens", function (id) {
     const accessToken = document.cookie.split(";").find(item => {
         return item.includes("accessToken")
@@ -112,16 +120,16 @@ socket.on("set host icon", function (id) {
 })
 
 socket.on("who host", function (id) {
-    Console.log("before host find")
+    console.log("before host find")
     let hostElement = document.querySelector(`[data-id='${id}']`)
     if (hostElement) {
-        Console.log("getting host")
+        console.log("getting host")
         hostElement.classList.add('host')
     }
 })
 
 socket.on("who dj", function (id) {
-    Console.log("before dj find")
+    console.log("before dj find")
     let djElement = document.querySelector(`[data-id='${id}']`)
     if (djElement) {
         console.log("getting dj")

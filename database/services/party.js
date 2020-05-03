@@ -170,8 +170,8 @@ exports.getHostId = async (partyId) => {
         });
 
         if (party) {
-            const hostID = party.hostId
-            return hostID;
+            const hostId = party.hostId
+            return hostId;
         }
     } catch (error) {
         return null
@@ -204,6 +204,38 @@ exports.getCurrentTrack = async (partyId) => {
             const currentTrack = party.currentTrack
             return currentTrack;
         }
+    } catch (error) {
+        return null
+    }
+}
+
+exports.getTrackPosition = async (partyId) => {
+    try {
+        const party = await Party.findOne({
+            partyId
+        });
+
+        if (party) {
+            const trackPosition = party.trackPosition
+            return trackPosition;
+        }
+    } catch (error) {
+        return null
+    }
+}
+
+
+exports.setTrackPosition = async (partyId, trackPosition) => {
+    try {
+        const party = await Party.findOne({
+            partyId
+        });
+
+        if (party) {
+            party.trackPosition = trackPosition
+        }
+
+        await party.save();
     } catch (error) {
         return null
     }
