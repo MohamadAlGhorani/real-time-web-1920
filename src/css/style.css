@@ -437,6 +437,7 @@ ul li {
 
   .userList-header  {
     width: 100%;
+    z-index: 99999999999999;
   }
 
   .users-number {
@@ -445,6 +446,7 @@ ul li {
     left: -51px;
     background-color: white;
     top: 2em;
+    z-index: 999999999;
   }
   .n-users {
     position: static;
@@ -457,6 +459,7 @@ ul li {
     position: absolute;
     left: -52px;
     background-color: white;
+    z-index: 999999999;
   }
 
   .pik {
@@ -488,7 +491,7 @@ ul li {
 
   .playlist-btn {
     display: block;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 1rem;
     background-color: white;
