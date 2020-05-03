@@ -129,12 +129,12 @@ io.on("connection", function (socket) {
       let guestsInRoom = clients.length
       io.to(room).emit("online users", guests, guestsInRoom);
     })
-    const hostID = partyServices.getHostId(id).then(function () {
+    const hostID = partyServices.getHostId(room).then(function () {
       if (hostID != '') {
         socket.to(socket.id).emit("who host", hostID)
       }
     })
-    const djId = partyServices.getDjId(id).then(function () {
+    const djId = partyServices.getDjId(room).then(function () {
       if (djId != '') {
         socket.to(socket.id).emit("who dj", djId)
       }
