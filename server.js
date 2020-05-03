@@ -105,31 +105,27 @@ io.on("connection", function (socket) {
 
   socket.on("join party", function (id, name) {
     partyServices.addUser(id, socket.id, name).then(function () {
-        rooms[id].users[socket.id] = name;
-        socket.roomId = id;
-        socket.join(id);
-        socket
-          .to(id)
-          .broadcast.emit(
-            "server message",
-            `Server: ${socket.userName} is connceted`
-          );
-      }).then(function () {
-        socket.emit("get users");
-      })
-      .then(function () {
-        const hostID = partyServices.getHostId(room).then(function () {
-          if (hostID != '') {
-            socket.to(socket.id).emit("who host", hostID)
-          }
-        })
-      }).then(function () {
-        const djId = partyServices.getDjId(room).then(function () {
-          if (djId != '') {
-            socket.to(socket.id).emit("who dj", djId)
-          }
-        })
-      })
+      rooms[id].users[socket.id] = name;
+      socket.roomId = id;
+      socket.join(id);
+      socket
+        .to(id)
+        .broadcast.emit(
+          "server message",
+          `Server: ${socket.userName} is connceted`
+        );
+      socket.emit("get users");
+    })
+    const hostID = partyServices.getHostId(room).then(function () {
+      if (hostID != '') {
+        socket.to(socket.id).emit("who host", hostID)
+      }
+    })
+    const djId = partyServices.getDjId(room).then(function () {
+      if (djId != '') {
+        socket.to(socket.id).emit("who dj", djId)
+      }
+    })
   });
 
   socket.on("users list", function (room, token) {
