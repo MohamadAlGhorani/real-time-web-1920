@@ -116,12 +116,12 @@ io.on("connection", function (socket) {
         );
       socket.emit("get users");
     })
-    const hostID = partyServices.getHostId(room).then(function () {
+    const hostID = partyServices.getHostId(id).then(function () {
       if (hostID != '') {
         socket.to(socket.id).emit("who host", hostID)
       }
     })
-    const djId = partyServices.getDjId(room).then(function () {
+    const djId = partyServices.getDjId(id).then(function () {
       if (djId != '') {
         socket.to(socket.id).emit("who dj", djId)
       }
