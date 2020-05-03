@@ -185,7 +185,7 @@ io.on("connection", function (socket) {
                   },
                   body: JSON.stringify({
                     uris: [`spotify:track:${current}`],
-                    position_ms: position
+                    position_ms: position + 1000
                   }),
                 }).then(async (response) => {
                   fetch(`https://api.spotify.com/v1/me/player/currently-playing`, {
