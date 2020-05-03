@@ -187,24 +187,24 @@ io.on("connection", function (socket) {
                     uris: [`spotify:track:${current}`],
                     position_ms: position
                   }),
-                }).then(async (response) => {
-                  await fetch(`https://api.spotify.com/v1/me/player/currently-playing`, {
-                      method: "GET",
-                      headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${myObject.accessToken}`,
-                      },
-                    })
-                    .then(async (response) => {
-                      const tracksData = await response.json();
-                      console.log(tracksData);
-                      socket.emit("current playing", tracksData);
-                    })
-                    .catch((error) => {
-                      console.log(error);
-                    });
-                })
+                }).then(async (response) => {})
               })
+            }).then(function () {
+              fetch(`https://api.spotify.com/v1/me/player/currently-playing`, {
+                  method: "GET",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${myObject.accessToken}`,
+                  },
+                })
+                .then(async (response) => {
+                  const tracksData = await response.json();
+                  console.log(tracksData);
+                  socket.emit("current playing", tracksData);
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
             })
           }
         })

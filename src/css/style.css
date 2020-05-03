@@ -283,6 +283,10 @@ header h4 {
   margin-top: 2em;
 }
 
+.join-form {
+  margin-top: 8em;
+}
+
 .inlog-form fieldset,
 .join-form fieldset,
 .create-form fieldset {
