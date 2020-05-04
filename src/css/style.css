@@ -432,52 +432,53 @@ ul li {
     height: calc(var(--vh, 1vh) * 100);
   }
 
-  /* .userList  {
+  .userList  {
     width: 100%;
     right: -100%;
     z-index: 9999;
     height: 100vh;
     height: calc(var(--vh, 1vh) * 100);
-  } */
+    overflow-x: visible;
+  }
 
-  /* .userList-header  {
+  .userList-header  {
     width: 100%;
     z-index: 99999999999999;
-  } */
+  }
 
-  /* .users-number {
+  .users-number {
     position: absolute;
     width: 40px;
     left: -51px;
     background-color: white;
     top: 2em;
     z-index: 999999999;
-  } */
-  /* .n-users {
+  }
+  .n-users {
     position: static;
     display: block;
     width: 40px;
     left: 0;
     z-index: 999;
-  } */
-  /* .close  {
+  }
+  .close  {
     position: absolute;
     left: -52px;
     background-color: white;
     z-index: 999999999;
-  } */
+  }
 
-  /* .pik {
+  .pik {
     position: static;
     left: 0;
-  } */
+  }
   .copy {
     background-color: white;
   }
-  /* .closed  {
+  .closed  {
     transition: all 1s ease-in-out;
     right: 0 !important;
-  } */
+  }
   .playlist-head  {
     width: 100%;
     padding: 0;
