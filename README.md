@@ -3,8 +3,11 @@
 
 ## Concept Party 2020
 Due to the current pandemic (COVID -19), throwing parties is no longer an option. People have to keep their distance to prevent the virus from spreading. That's why the idea of virtual parties could help people reduce the effect of social distancing and bring people together once again. Therefore I developt Party 2020 using the Spotify API. 
+
 Party 2020 is an online web application that brings music lovers together. It is a virtual place where people can chat and listen to the same music just like in real life. Any Spotify Primum user can create or join a party. To create a party, users will have to log in using a Spotify premium account, that will enable them to choose a playlist that already exists in their Spotify app. This playlist will include all the tracks for the party and users will be able to listen to the tracks through their Spotify application on their own device. 
+
 When someone creates a party, he/ she will be marked as the party host. From there the host can copy and share the party ID with other people. 
+
 People who join a party using the party ID will be able to chat with other guests at that party, Listen to the same music, and even get the chance to be the DJ when getting permission from the host.
 
 ## Data life cycle
@@ -66,6 +69,12 @@ socket.on("disconnected" function(){})
 - socket.to(roomId).broadcast.emit("server message", msg);
 - socket.to(roomId).emit("online users", leftUsers, leftUsersNumber);
 <hr/>
+
+## Technologies Used 
+- [Node](https://nodejs.org/en/)
+- [Express](https://expressjs.com/)
+- [Websocket](https://socket.io/)
+- [MongoDB](https://www.mongodb.com/)
 
 ## Installation
 - Download [Node.js](https://nodejs.org/en/) if you don't have it. 
