@@ -526,6 +526,12 @@ ul li {
     bottom: 100%;
     transition: all 1s ease-in-out;
   }
+  .playlist-footer h4 {
+    padding-left: 1em;
+  }
+  .playlist-footer div {
+    padding-left: 1em;
+  }
 
   header {
     padding-left: 0.5em;
