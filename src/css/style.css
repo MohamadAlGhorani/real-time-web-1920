@@ -443,7 +443,14 @@ ul li {
 
   .userList-header  {
     width: 100%;
+    right: -100%;
     z-index: 99999999999999;
+    transition: all 1s ease-in-out;
+  }
+  .list-host {
+    width: 90%;
+    right: -100%;
+    transition: all 1s ease-in-out;
   }
 
   .users-number {
@@ -485,6 +492,12 @@ ul li {
     width: 100%;
     right: 0;
     z-index: 99999999999999;
+    transition: all 1s ease-in-out;
+  }
+  .closed .list-host {
+    width: 90%;
+    right: 0;
+    transition: all 1s ease-in-out;
   }
 
   .playlist-head  {
