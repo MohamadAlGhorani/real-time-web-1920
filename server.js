@@ -324,6 +324,10 @@ io.on("connection", function (socket) {
   });
 
   socket.on("disconnect", function () {
+    const hostID = partyServices.getHostId(id)
+    hostID.then(function (results) {
+      socket.to(results).emit("getPosition")
+    })
     getUserRooms(socket).forEach((room) => {
       partyServices.removeUser(room, socket.id).then(function () {
         socket
