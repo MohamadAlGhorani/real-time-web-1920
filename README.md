@@ -8,53 +8,53 @@ When someone creates a party, he/ she will be marked as the party host. From the
 People who join a party using the party ID will be able to chat with other guests at that party, Listen to the same music, and even get the chance to be the DJ when getting permission from the host.
 
 ## Data life cycle
-<img width="701" alt="Screenshot 2020-04-17 at 11 32 42" src="https://user-images.githubusercontent.com/45425087/79802132-bd57c880-835f-11ea-9893-94e36ea9f9e4.png">
+![DLC](https://user-images.githubusercontent.com/45425087/80980219-a9fd3080-8e28-11ea-8f9f-68e410738a44.png)
 
 ## Real-time events
 socket.emit("server message", msg){}) 
 <hr/>
 
-socket.on("join party", function (room, name) {})
+socket.on("join party", function (roomId, userName) {})
 - socket.to(room).broadcast.emit("server message", msg);
 - socket.to(hostId).emit("getPosition"){})
-- - socket.on("setPosition", function (room, token) {})
+- - socket.on("setPosition", function (roomId, accessToken) {})
 - socket.emit("get users");
-- - socket.on("users list", function (room){}) 
-- - - io.to(room).emit("online users", guestsInRoom, NumberOfguestsInRoom);
-- - socket.on("rights", function (room, token){})
+- - socket.on("users list", function (roomId){}) 
+- - - io.to(roomId).emit("online users", guestsInRoom, NumberOfguestsInRoom);
+- - socket.on("rights", function (roomId, accessToken){})
 - - - - if(host)
 - - - - - socket.broadcast.to(socket.id).emit("host", socket.id);
 - - - - - socket.to(room).broadcast.emit("set host icon", socket.id);
 - - - - if(guest)
 - - - - - socket.emit("who host", hostId);
 - - - - - socket.emit("who dj", djId);
-- - - - - socket.emit("current playing", tracksData);
+- - - - - socket.emit("current playing", trackData);
 <hr/>
 
-socket.on("chat message", function (msg, ranColor, room){}) 
+socket.on("chat message", function (msg, ranColor, roomId){}) 
 - socket.to(room).broadcast.emit("chat message", msg, ranColor);
 <hr/>
 
-socket.on("dj", function (userId, room, userName){}) 
-- socket.to(room).broadcast.emit("update dj", userId);
+socket.on("dj", function (userId, roomId, userName){}) 
+- socket.to(roomId).broadcast.emit("update dj", userId);
 - socket.emit("update dj", userId);
-- socket.to(room).broadcast.emit("delete dj");
+- socket.to(roomId).broadcast.emit("delete dj");
 - socket.broadcast.to(userId).emit("set dj");
-- socket.to(room).emit("server message", msg);
+- socket.to(roomId).emit("server message", msg);
 - socket.emit("server message", msg);
 - socket.broadcast.to(userId).emit("server message", msg);
 <hr/>
 
-socket.on("getSong", function (trackId, room) {})
+socket.on("getSong", function (trackId, roomId) {})
 - socket.emit("getTokens", trackId);
-- socket.to(room).emit("getTokens", trackId);
-- - socket.on("playSong", function (room, accessToken, trackId){})
+- socket.to(roomId).emit("getTokens", trackId);
+- - socket.on("playSong", function (roomId, accessToken, trackId){})
 - - -  if (response.status == 403)
 - - - - socket.emit("server message", msg);
 - - -  if (response.status == 404) 
 - - - - socket.emit( "server message",msg);
 - - socket.emit("current playing", trackData);
-- - socket.to(room).broadcast.emit("current playing", tracksData);
+- - socket.to(room).broadcast.emit("current playing", trackData);
 <hr/>
 
 socket.on("set volume", function (volume, token){}) 
@@ -62,9 +62,9 @@ socket.on("set volume", function (volume, token){})
 
 socket.on("disconnected" function(){}) 
 - socket.to(hostId).emit("getPosition"){})
-- - socket.on("setPosition", function (room, token) {})
-- socket.to(room).broadcast.emit("server message", msg);
-- socket.to(room).emit("online users", leftUsers, leftUsersNumber);
+- - socket.on("setPosition", function (roomId, token) {})
+- socket.to(roomId).broadcast.emit("server message", msg);
+- socket.to(roomId).emit("online users", leftUsers, leftUsersNumber);
 <hr/>
 
 ## Installation
