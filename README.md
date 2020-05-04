@@ -13,6 +13,7 @@ People who join a party using the party ID will be able to chat with other guest
 ## Real-time events
 socket.emit("server message", msg){}) 
 <hr/>
+
 socket.on("join party", function (room, name) {})
 - socket.to(room).broadcast.emit("server message", msg);
 - socket.to(hostId).emit("getPosition"){})
@@ -29,9 +30,11 @@ socket.on("join party", function (room, name) {})
 - - - - - socket.emit("who dj", djId);
 - - - - - socket.emit("current playing", tracksData);
 <hr/>
+
 socket.on("chat message", function (msg, ranColor, room){}) 
 - socket.to(room).broadcast.emit("chat message", msg, ranColor);
 <hr/>
+
 socket.on("dj", function (userId, room, userName){}) 
 - socket.to(room).broadcast.emit("update dj", userId);
 - socket.emit("update dj", userId);
@@ -41,6 +44,7 @@ socket.on("dj", function (userId, room, userName){})
 - socket.emit("server message", msg);
 - socket.broadcast.to(userId).emit("server message", msg);
 <hr/>
+
 socket.on("getSong", function (trackId, room) {})
 - socket.emit("getTokens", trackId);
 - socket.to(room).emit("getTokens", trackId);
@@ -52,8 +56,10 @@ socket.on("getSong", function (trackId, room) {})
 - - socket.emit("current playing", trackData);
 - - socket.to(room).broadcast.emit("current playing", tracksData);
 <hr/>
+
 socket.on("set volume", function (volume, token){}) 
 <hr/>
+
 socket.on("disconnected" function(){}) 
 - socket.to(hostId).emit("getPosition"){})
 - - socket.on("setPosition", function (room, token) {})
