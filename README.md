@@ -12,6 +12,7 @@ People who join a party using the party ID will be able to chat with other guest
 
 ## Real-time events
 socket.emit("server message", msg){}) 
+<hr/>
 
 socket.on("join party", function (room, name) {})
 - socket.to(room).broadcast.emit("server message", msg);
