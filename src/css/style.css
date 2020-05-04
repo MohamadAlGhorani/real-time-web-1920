@@ -475,10 +475,18 @@ ul li {
   .copy {
     background-color: white;
   }
+
   .closed  {
     transition: all 1s ease-in-out;
     right: 0 !important;
   }
+
+  .closed .userList-header  {
+    width: 100%;
+    right: 0;
+    z-index: 99999999999999;
+  }
+
   .playlist-head  {
     width: 100%;
     padding: 0;
