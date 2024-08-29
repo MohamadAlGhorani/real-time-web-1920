@@ -81,7 +81,7 @@ socket.on("disconnected" function(){})
 - Clone this repository.
 - Navigate to the folder of the repository using your terminal.
 - Write in your terminal ```npm install``` to download the node modules.
-- Run ``` npm run dev ``` in your terminal to open the porject in your brwoser using localhost:3000/
+- Run ``` npm run dev ``` in your terminal to open the porject in your brwoser using localhost:8080/
 
 ## APi
 I used [spotify](https://www.npmjs.com/package/spotify-web-api-node) api to get all the data about the users, their playlists and their tracks in the playlists.
