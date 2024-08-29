@@ -22,6 +22,12 @@ module.exports = function (req, res) {
                 title: "Setup",
                 playlistsData: playlistsData,
             });
+        }).catch(error => {
+            console.log(error)
+            res.status(500).send('Internal Server Error' + error);
         });
-    })
+    }).catch(error => {
+        console.log(error)
+        res.status(500).send('Internal Server Error' + error);
+    });
 }
