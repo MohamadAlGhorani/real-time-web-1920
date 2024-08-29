@@ -41,7 +41,7 @@ let userName;
 const partyServices = require("./database/services/party");
 
 const config = {
-  port: process.env.PORT || 8080,
+  PORT: process.env.PORT || 8080,
   HOST: '0.0.0.0',
 };
 
@@ -371,8 +371,8 @@ io.on("connection", function (socket) {
   });
 });
 
-http.listen(config, function () {
-  console.log("listening on *:3000");
+http.listen(config.PORT, config.HOST, function () {
+  console.log(`http://${config.HOST}:${config.PORT}`);
 });
 
 function getUserRooms(socket) {
