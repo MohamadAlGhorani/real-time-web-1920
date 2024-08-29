@@ -15,7 +15,10 @@ module.exports = function (req, res) {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`,
             }
-        }).then(response => response.json())
+        }).then(response => response.json()).catch(error => {
+            console.log(error)
+            res.status(500).send('Internal Server Error' + error);
+        })
     ]).then(([tracksData, data]) => {
         userName = data.display_name
         res.render("party", {
@@ -24,5 +27,8 @@ module.exports = function (req, res) {
             name: userName,
             id: req.params.id
         });
+    }).catch(error => {
+        console.log(error)
+        res.status(500).send('Internal Server Error' + error);
     });
 }
