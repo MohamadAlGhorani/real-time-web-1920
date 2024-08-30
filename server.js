@@ -65,7 +65,7 @@ app
     const token = req.cookies.accessToken;
 
     Promise.all([
-      fetch(`https://api.spotify.com/v1/playlists/${req.params.id}/tracks`, {
+      fetch(`https://api.spotify.com/v1/playlists/${req.params.id}/tracks?limit=50`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
