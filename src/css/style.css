@@ -53,7 +53,7 @@ button:hover {
   display: none;
 }
 input.dj-volume {
-  width: 93%;
+  width: 100%;
 }
 
 .play-active {
@@ -527,15 +527,10 @@ ul li {
 
   .playlist-head  {
     width: 100%;
-    padding: 0;
-    padding-bottom: 1em;
-    padding-top: 1em;
     top: -100%;
     transition: all 1s ease-in-out;
   }
-  .playlist-head * {
-    padding-left: 1em;
-  }
+  
   .audio-container {
     padding-left: 1em;
   }
