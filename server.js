@@ -3,7 +3,6 @@ const compression = require("compression");
 const fetch = require("node-fetch");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
-// const SpotifyWebApi = require("spotify-web-api-node");
 const app = express();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
@@ -14,8 +13,9 @@ const spotifyLogin = require("./routes/oAuth/login");
 const landingPageRoute = require("./routes/landingPage");
 const homeRoute = require("./routes/home");
 const joinRoute = require("./routes/join");
-const partyRoute = require("./routes/party");
 const setupRoute = require("./routes/setup");
+
+const partyServices = require("./database/services/party");
 require("dotenv").config();
 
 mongoose
@@ -27,22 +27,15 @@ mongoose
     console.log("connecetion successfull");
   })
   .catch((error) => {
-    console.log(error);
+    console.error(error);
   });
-// var spotifyApi = new SpotifyWebApi({
-//   clientId: process.env.SPOTIFY_CLIENT_ID,
-//   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-//   redirectUri: process.env.SPOTIFY_REDIRECT_URI
-// });
 
 const rooms = {};
 let userName;
 
-const partyServices = require("./database/services/party");
-
 const config = {
   PORT: process.env.PORT || 8080,
-  HOST: '0.0.0.0',
+  HOST: "0.0.0.0",
 };
 
 app
@@ -70,29 +63,41 @@ app
     };
 
     const token = req.cookies.accessToken;
-    console.log(token);
+
     Promise.all([
       fetch(`https://api.spotify.com/v1/playlists/${req.params.id}/tracks`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-      }).then((response) => response.json()),
+      })
+        .then((response) => response.json())
+        .catch((error) => {
+          console.error(error);
+        }),
       fetch("https://api.spotify.com/v1/me", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-      }).then((response) => response.json()),
-    ]).then(([tracksData, data]) => {
-      userName = data.display_name;
-      res.render("party", {
-        title: "Party",
-        tracksData: tracksData,
-        name: userName,
-        id: req.params.id,
+      })
+        .then((response) => response.json())
+        .catch((error) => {
+          console.error(error);
+        }),
+    ])
+      .then(([tracksData, data]) => {
+        userName = data.display_name;
+        res.render("party", {
+          title: "Party",
+          tracksData: tracksData,
+          name: userName,
+          id: req.params.id,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
       });
-    });
   });
 
 io.on("connection", function (socket) {
@@ -150,7 +155,6 @@ io.on("connection", function (socket) {
         },
       }).then(async (response) => {
         const playlistsData = await response.json();
-        console.log(playlistsData);
         playlistsData.items.forEach((item) => {
           if (item.id == room) {
             partyServices.setHostId(room, socket.id).then(function () {
@@ -163,13 +167,10 @@ io.on("connection", function (socket) {
           } else {
             const hostID = partyServices.getHostId(room);
             hostID.then(function (results) {
-              console.log(results);
-              // socket.to(results).emit("getPosition")
               socket.emit("who host", results);
             });
             const djId = partyServices.getDjId(room);
             djId.then(function (results) {
-              console.log(results);
               socket.emit("who dj", results);
             });
             const currentTrack = partyServices.getCurrentTrack(room);
@@ -177,7 +178,6 @@ io.on("connection", function (socket) {
               .then(function (current) {
                 const trackPosition = partyServices.getTrackPosition(room);
                 trackPosition.then(function (position) {
-                  console.log(current);
                   fetch(`https://api.spotify.com/v1/me/player/play`, {
                     method: "PUT",
                     headers: {
@@ -203,12 +203,19 @@ io.on("connection", function (socket) {
                   }
                 )
                   .then(async (response) => {
-                    const tracksData = await response.json();
-                    console.log(tracksData);
-                    socket.emit("current playing", tracksData);
+                    try {
+                      const text = await response.text(); // Get the response as text
+                      const tracksData = JSON.parse(text); // Try to parse the text as JSON
+                      console.log('1', tracksData);
+                      if (tracksData) {
+                        socket.emit("current playing", tracksData);
+                      }
+                    } catch (err) {
+                      console.error(`Invalid JSON response body at ${response.url} reason: ${err.message}`);
+                    }
                   })
                   .catch((error) => {
-                    console.log(error);
+                    console.error(error);
                   });
               });
           }
@@ -259,7 +266,7 @@ io.on("connection", function (socket) {
         },
       }
     ).then(async (response) => {
-      console.log(response);
+      console.info(response);
     });
   });
 
@@ -271,17 +278,21 @@ io.on("connection", function (socket) {
         Authorization: `Bearer ${token}`,
       },
     }).then(async (response) => {
-      const positionData = await response.json();
-      console.log(positionData);
-      partyServices.setTrackPosition(room, positionData.progress_ms);
+      try {
+        const text = await response.text(); // Get the response as text
+        const positionData = JSON.parse(text);
+        if(positionData) {
+          partyServices.setTrackPosition(room, positionData.progress_ms);
+        }
+      } catch (err) {
+        console.error(`Invalid JSON response body at ${response.url} reason: ${err.message}`);
+      }
+    }).catch((error) => {
+      console.error('Fetch error:', error);
     });
   });
 
   socket.on("playSong", function (myObject) {
-    console.log("my object is:", myObject);
-    // const query = queryString.stringify({
-    //   uris: ['spotify:track:${myObject.id}']
-    // })
     fetch(`https://api.spotify.com/v1/me/player/play`, {
       method: "PUT",
       headers: {
@@ -293,8 +304,6 @@ io.on("connection", function (socket) {
       }),
     })
       .then(async (response) => {
-        // const tracksData = await response.json();
-        // console.log("My response is:", response, response.status);
         if (response.status == 403) {
           socket.emit(
             "server message",
@@ -315,23 +324,29 @@ io.on("connection", function (socket) {
           },
         })
           .then(async (response) => {
-            const tracksData = await response.json();
-            console.log(tracksData);
-            partyServices
-              .setCurrentTrack(myObject.room, tracksData.item.id)
-              .then(function () {
-                socket.emit("current playing", tracksData);
-                socket
-                  .to(myObject.room)
-                  .broadcast.emit("current playing", tracksData);
-              });
+            try {
+              const text = await response.text(); // Get the response as text
+              const tracksData = JSON.parse(text); // Try to parse the text as JSON
+              if(tracksData) {
+                partyServices
+                .setCurrentTrack(myObject.room, tracksData.item.id)
+                .then(function () {
+                  socket.emit("current playing", tracksData);
+                  socket
+                    .to(myObject.room)
+                    .broadcast.emit("current playing", tracksData);
+                });
+              }
+            } catch (err) {
+              console.error(`Invalid JSON response body at ${response.url} reason: ${err.message}`);
+            }
           })
           .catch((error) => {
-            console.log(error);
+            console.error(error);
           });
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   });
 
