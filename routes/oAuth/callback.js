@@ -35,8 +35,7 @@ module.exports = async (request, response, next) => {
 
         response.redirect(`/home`);
     } catch (error) {
-        console.log("Error!!!", error);
-
+        console.error("Error!!!", error);
         response.send(error);
     }
 };

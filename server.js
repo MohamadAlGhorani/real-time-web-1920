@@ -71,20 +71,14 @@ app
           Authorization: `Bearer ${token}`,
         },
       })
-        .then((response) => response.json())
-        .catch((error) => {
-          console.error(error);
-        }),
+        .then((response) => response.json()),
       fetch("https://api.spotify.com/v1/me", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       })
-        .then((response) => response.json())
-        .catch((error) => {
-          console.error(error);
-        }),
+        .then((response) => response.json()),
     ])
       .then(([tracksData, data]) => {
         userName = data.display_name;
