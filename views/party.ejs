@@ -46,9 +46,12 @@
 		</div>
 		<div class="audio-container">
 			<% tracksData.items.forEach(function(track) { %>
-				<div>
-					<p><%- track.track.name %></p>
-					<button data-id="<%- track.track.id %>" class="play-btn">Play</button>
+				<div class="track-card">
+					<img src="<%- track.track.album.images[0].url %>" alt="">
+					<div>
+						<p><%- track.track.name %></p>
+						<button data-id="<%- track.track.id %>" class="play-btn">Play</button>
+					</div>
 				</div>
 			<% }) %>
 		</div>
