@@ -8,6 +8,7 @@ module.exports = function (req, res) {
             Authorization: `Bearer ${token}`,
         }
     }).then(async response => {
+        console.log('setup', response);
         const data = await response.json();
         fetch(`https://api.spotify.com/v1/users/${data.id}/playlists`, {
             headers: {

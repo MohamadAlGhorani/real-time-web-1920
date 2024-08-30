@@ -81,6 +81,8 @@ app
         .then((response) => response.json()),
     ])
       .then(([tracksData, data]) => {
+        console.log('party tracks', tracksData);
+        console.log('user info', data);
         userName = data.display_name;
         res.render("party", {
           title: "Party",
