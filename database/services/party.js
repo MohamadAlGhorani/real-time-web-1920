@@ -25,11 +25,9 @@ exports.create = async (partyId) => {
         });
 
         Party.create(newParty)
-        // await newParty.save();
 
         return 'Successfully created party';
     } catch (error) {
-        console.error(error);
         throw new Error(error)
     }
 }

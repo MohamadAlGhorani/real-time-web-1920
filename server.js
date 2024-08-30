@@ -206,12 +206,13 @@ io.on("connection", function (socket) {
                     try {
                       const text = await response.text(); // Get the response as text
                       const tracksData = JSON.parse(text); // Try to parse the text as JSON
-                      console.log('1', tracksData);
                       if (tracksData) {
                         socket.emit("current playing", tracksData);
                       }
                     } catch (err) {
-                      console.error(`Invalid JSON response body at ${response.url} reason: ${err.message}`);
+                      console.error(
+                        `Invalid JSON response body at ${response.url} reason: ${err.message}`
+                      );
                     }
                   })
                   .catch((error) => {
@@ -277,22 +278,39 @@ io.on("connection", function (socket) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-    }).then(async (response) => {
-      try {
-        const text = await response.text(); // Get the response as text
-        const positionData = JSON.parse(text);
-        if(positionData) {
-          partyServices.setTrackPosition(room, positionData.progress_ms);
+    })
+      .then(async (response) => {
+        try {
+          const text = await response.text(); // Get the response as text
+          const positionData = JSON.parse(text);
+          if (positionData) {
+            partyServices.setTrackPosition(room, positionData.progress_ms);
+          }
+        } catch (err) {
+          console.error(
+            `Invalid JSON response body at ${response.url} reason: ${err.message}`
+          );
         }
-      } catch (err) {
-        console.error(`Invalid JSON response body at ${response.url} reason: ${err.message}`);
-      }
-    }).catch((error) => {
-      console.error('Fetch error:', error);
-    });
+      })
+      .catch((error) => {
+        console.error("Fetch error:", error);
+      });
   });
 
   socket.on("playSong", function (myObject) {
+    fetch(`https://api.spotify.com/v1/me/player/repeat?state=track`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${myObject.accessToken}`,
+      },
+    })
+      .then(async (response) => {
+        console.info(response);
+      })
+      .catch((error) => {
+        console.error("Fetch error:", error);
+      });
     fetch(`https://api.spotify.com/v1/me/player/play`, {
       method: "PUT",
       headers: {
@@ -327,18 +345,20 @@ io.on("connection", function (socket) {
             try {
               const text = await response.text(); // Get the response as text
               const tracksData = JSON.parse(text); // Try to parse the text as JSON
-              if(tracksData) {
+              if (tracksData) {
                 partyServices
-                .setCurrentTrack(myObject.room, tracksData.item.id)
-                .then(function () {
-                  socket.emit("current playing", tracksData);
-                  socket
-                    .to(myObject.room)
-                    .broadcast.emit("current playing", tracksData);
-                });
+                  .setCurrentTrack(myObject.room, tracksData.item.id)
+                  .then(function () {
+                    socket.emit("current playing", tracksData);
+                    socket
+                      .to(myObject.room)
+                      .broadcast.emit("current playing", tracksData);
+                  });
               }
             } catch (err) {
-              console.error(`Invalid JSON response body at ${response.url} reason: ${err.message}`);
+              console.error(
+                `Invalid JSON response body at ${response.url} reason: ${err.message}`
+              );
             }
           })
           .catch((error) => {
