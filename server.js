@@ -325,7 +325,7 @@ io.on("connection", function (socket) {
         if (response.status == 404) {
           socket.emit(
             "server message",
-            "Server: We can't find an active device please open your spotify application on your own device and start a random track to active the session."
+            "Server: We can't find an active device please open your spotify application on your own device and start a random track to activate the session."
           );
         }
         await fetch(`https://api.spotify.com/v1/me/player/currently-playing`, {
