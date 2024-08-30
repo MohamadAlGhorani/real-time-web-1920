@@ -20,6 +20,7 @@ module.exports = function (req, res) {
             res.status(500).send('Internal Server Error' + error);
         })
     ]).then(([tracksData, data]) => {
+        console.log(tracksData, data)
         userName = data.display_name
         res.render("party", {
             title: "Party",
