@@ -374,7 +374,6 @@ ul li {
   border: 1px solid lightgray;
   padding-left: 1em;
   padding-right: 1em;
-  border-radius: 50px;
   font-size: 16px;
 }
 
@@ -387,8 +386,19 @@ ul li {
   width: 23%;
   font-size: 14px;
   background-color: black;
+  border: 1px solid black;
+  cursor: pointer;
   color: white;
+  border-bottom-right-radius: 50px;
+  border-top-right-radius: 50px;
+  font-weight: bold;
 }
+
+.message-form input[type="text"] {
+  border-bottom-left-radius: 50px;
+  border-top-left-radius: 50px;
+}
+
 
 .server-message {
   color: black;
