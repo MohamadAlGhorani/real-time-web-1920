@@ -1,15 +1,19 @@
-const gulp = require("gulp");
-const concat = require("gulp-concat");
-const autoprefixer = require("gulp-autoprefixer");
-const cleanCSS = require("gulp-clean-css");
+const fs = require("fs");
+const path = require("path");
+const CleanCSS = require("clean-css");
+const autoprefixer = require("autoprefixer");
+const postcss = require("postcss");
 
-return gulp
-  .src(["./src/css/*.css"])
-  .pipe(concat("index.css"))
-  .pipe(cleanCSS())
-  .pipe(
-    autoprefixer({
-      cascade: false
-    })
-  )
-  .pipe(gulp.dest("./static/"));
+const srcDir = path.join(__dirname, "../src/css");
+const outDir = path.join(__dirname, "../static");
+
+const files = fs.readdirSync(srcDir).filter((f) => f.endsWith(".css"));
+const combined = files.map((f) => fs.readFileSync(path.join(srcDir, f), "utf8")).join("\n");
+
+postcss([autoprefixer])
+  .process(combined, { from: undefined })
+  .then((result) => {
+    const minified = new CleanCSS().minify(result.css).styles;
+    if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
+    fs.writeFileSync(path.join(outDir, "index.css"), minified);
+  });

@@ -1,32 +1,54 @@
 const fetch = require("node-fetch");
+const refreshAccessToken = require("./oAuth/refreshToken");
 
-module.exports = function (req, res) {
-    const token = req.cookies.accessToken;
-    fetch("https://api.spotify.com/v1/me", {
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-        }
-    }).then(async response => {
-        console.log('setup', response);
-        const data = await response.json();
-        fetch(`https://api.spotify.com/v1/users/${data.id}/playlists`, {
+module.exports = async function (req, res) {
+    var token = req.cookies.accessToken;
+    if (!token) {
+        token = await refreshAccessToken(req, res);
+        if (!token) return res.redirect("/");
+    }
+
+    async function loadPlaylists(accessToken) {
+        const meRes = await fetch("https://api.spotify.com/v1/me", {
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${accessToken}`,
             }
-        }).then(async response => {
-            const playlistsData = await response.json();
-            res.render("setup", {
-                title: "Setup",
-                playlistsData: playlistsData,
-            });
-        }).catch(error => {
-            console.error(error);
-            res.status(500).send('Internal Server Error' + error);
         });
-    }).catch(error => {
+        if (meRes.status === 401) return null;
+        const data = await meRes.json();
+
+        const playlistsRes = await fetch(`https://api.spotify.com/v1/users/${encodeURIComponent(data.id)}/playlists`, {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${accessToken}`,
+            }
+        });
+        if (playlistsRes.status === 401) return null;
+        const playlistsData = await playlistsRes.json();
+        return playlistsData;
+    }
+
+    try {
+        var result = await loadPlaylists(token);
+
+        // Token expired — refresh and retry once
+        if (!result) {
+            token = await refreshAccessToken(req, res);
+            if (!token) return res.redirect("/");
+            result = await loadPlaylists(token);
+        }
+
+        if (!result) {
+            return res.redirect("/");
+        }
+
+        res.render("setup", {
+            title: "Setup",
+            playlistsData: result,
+        });
+    } catch (error) {
         console.error(error);
-        res.status(500).send('Internal Server Error' + error);
-    });
+        res.status(500).send('Internal Server Error');
+    }
 }

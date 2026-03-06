@@ -1,0 +1,18 @@
+<%- include('./partials/head.ejs') %>
+
+<main id="main" class="auth-page" role="main" aria-label="Page not found">
+	<div class="auth-card" role="region" aria-labelledby="error-heading">
+		<div class="logo" id="error-heading" role="heading" aria-level="1">404</div>
+		<p class="subtitle">Page not found</p>
+		<div class="divider" role="separator"></div>
+		<p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem;">
+			The page you're looking for doesn't exist or has been moved.
+		</p>
+		<a href="/" class="btn btn-primary" style="width: 100%;" role="button" aria-label="Go to home page">
+			<span class="material-symbols-outlined" style="font-size: 20px;" aria-hidden="true">home</span>
+			Go Home
+		</a>
+	</div>
+</main>
+
+<%- include('./partials/footer.ejs') %>

@@ -1,11 +1,18 @@
-<%- include ./partials/head.ejs %>
-</header>
-<main>
-<form class="inlog-form spotify-login" action="/login">
-	<fieldset>
-		<legend>Login with your premium spotify account</legend>
-	</fieldset>
-		<input type="submit" value="login">
-</form>
+<%- include('./partials/head.ejs') %>
 
-<%- include ./partials/footer.ejs %>
+<main id="main" class="auth-page" role="main" aria-label="Login">
+	<div class="auth-card" role="region" aria-labelledby="login-heading">
+		<div class="logo" id="login-heading" role="heading" aria-level="1"><img src="/favicon.svg" alt="" class="logo-icon" aria-hidden="true">Party 2020</div>
+		<p class="subtitle">Listen together, vibe together</p>
+		<div class="divider" role="separator"></div>
+		<p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem;">
+			Connect your Spotify Premium account to start or join a party
+		</p>
+		<a href="/login" class="btn btn-primary" style="width: 100%;" role="button" aria-label="Login with Spotify">
+			<span class="material-symbols-outlined" style="font-size: 20px;" aria-hidden="true">login</span>
+			Login with Spotify
+		</a>
+	</div>
+</main>
+
+<%- include('./partials/footer.ejs') %>

@@ -7,7 +7,18 @@ const {
     SPOTIFY_CLIENT_ID,
 } = process.env;
 
-module.exports = async (request, response, next) => {
+const isProduction = process.env.NODE_ENV === "production";
+
+module.exports = async (request, response) => {
+    // Verify OAuth state to prevent CSRF
+    const state = request.query.state;
+    const storedState = request.cookies.oauth_state;
+    if (!state || !storedState || state !== storedState) {
+        return response.status(403).send("State mismatch. Please try logging in again.");
+    }
+    // Clear the state cookie
+    response.clearCookie("oauth_state");
+
     const code = request.query.code;
     const queryObject = {
         grant_type: "authorization_code",
@@ -30,16 +41,23 @@ module.exports = async (request, response, next) => {
         const spotifyResponse = await fetch(url, fetchOptions);
         const data = await spotifyResponse.json();
 
-        response.cookie("accessToken", data.access_token);
-        response.cookie("refreshToken", data.refresh_token);
+        response.cookie("accessToken", data.access_token, {
+            sameSite: "lax",
+            secure: isProduction,
+        });
+        response.cookie("refreshToken", data.refresh_token, {
+            httpOnly: true,
+            sameSite: "lax",
+            secure: isProduction,
+        });
 
         response.redirect(`/home`);
     } catch (error) {
-        console.error("Error!!!", error);
-        response.send(error);
+        console.error("Error:", error);
+        response.status(500).send("Authentication failed. Please try again.");
     }
 };
 
 function encodeToBase64(text) {
-    return new Buffer.from(text).toString("base64");
+    return Buffer.from(text).toString("base64");
 }

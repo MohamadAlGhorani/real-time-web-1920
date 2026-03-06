@@ -1,20 +1,36 @@
-<%- include ./partials/head.ejs %>
-</header>
-<main>
-<form class="join-form" action="/join" method="GET">
-	<fieldset>
-		<legend>Join a Party</legend>
-		<p>To join the party please open your spotify application on your own device first and start playing any track. Then enter the party ID.</p>
-		<label for="party">Party ID: </label>
-		<input id="party" type="text" name="party_id">
-	</fieldset>
-		<input type="submit" value="Join The Party">
-</form>
-<form class="create-form" action="/setup">
-	<fieldset>
-		<legend>Create a Party</legend>
-	</fieldset>
-		<input type="submit" value="Create">
-</form>
+<%- include('./partials/head.ejs') %>
 
-<%- include ./partials/footer.ejs %>
+<main id="main" class="auth-page" role="main" aria-label="Home">
+	<div class="auth-card" role="region" aria-labelledby="home-heading">
+		<div class="logo" id="home-heading" role="heading" aria-level="1"><img src="/favicon.svg" alt="" class="logo-icon" aria-hidden="true">Party 2020</div>
+		<p class="subtitle">What would you like to do?</p>
+
+		<div class="divider" role="separator"></div>
+
+		<h2 id="join-heading">Join a Party</h2>
+		<p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.5rem;">
+			Open Spotify on your device and play any track first, then enter the party code
+		</p>
+		<form action="/join" method="GET" style="margin-top: 0.5rem;" aria-labelledby="join-heading">
+			<label for="party">Party Code</label>
+			<input id="party" type="text" name="party_id" placeholder="Enter the party code" required aria-required="true" autocomplete="off">
+			<button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1.2rem;">
+				<span class="material-symbols-outlined" style="font-size: 20px;" aria-hidden="true">group</span>
+				Join Party
+			</button>
+		</form>
+
+		<div class="divider" role="separator"></div>
+
+		<h2 id="host-heading">Host a Party</h2>
+		<p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1rem;">
+			Pick a playlist and invite your friends
+		</p>
+		<a href="/setup" class="btn btn-secondary" style="width: 100%;" role="button" aria-label="Create a new party">
+			<span class="material-symbols-outlined" style="font-size: 20px;" aria-hidden="true">add_circle</span>
+			Create Party
+		</a>
+	</div>
+</main>
+
+<%- include('./partials/footer.ejs') %>

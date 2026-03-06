@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const Party = require('../models/party');
 
 exports.getIfExists = async (partyId) => {
@@ -19,12 +18,7 @@ exports.getIfExists = async (partyId) => {
 
 exports.create = async (partyId) => {
     try {
-        const newParty = new Party({
-            _id: new mongoose.Types.ObjectId(),
-            partyId: partyId
-        });
-
-        Party.create(newParty)
+        await Party.create({ partyId });
 
         return 'Successfully created party';
     } catch (error) {
@@ -82,13 +76,11 @@ exports.removeUser = async (partyId, userId) => {
             await party.save();
 
             if (party.users.length === 0) {
-                await this.remove(partyId);
+                await exports.remove(partyId);
             }
 
             return 'Successfully removed user from party';
         }
-
-        throw new Error(`Party with id ${partyId} does not exist.`)
     } catch (error) {
         console.error(error);
     }
@@ -119,10 +111,9 @@ exports.setHostId = async (partyId, hostId) => {
         });
 
         if (party) {
-            party.hostId = hostId
+            party.hostId = hostId;
+            await party.save();
         }
-
-        await party.save();
     } catch (error) {
         return null
     }
@@ -136,11 +127,9 @@ exports.setDjId = async (partyId, djId) => {
         });
 
         if (party) {
-            party.djId = djId
+            party.djId = djId;
+            await party.save();
         }
-
-        await party.save();
-
     } catch (error) {
         return null
     }
@@ -153,10 +142,9 @@ exports.setCurrentTrack = async (partyId, currentTrack) => {
         });
 
         if (party) {
-            party.currentTrack = currentTrack
+            party.currentTrack = currentTrack;
+            await party.save();
         }
-
-        await party.save();
     } catch (error) {
         return null
     }
@@ -231,10 +219,9 @@ exports.setTrackPosition = async (partyId, trackPosition) => {
         });
 
         if (party) {
-            party.trackPosition = trackPosition
+            party.trackPosition = trackPosition;
+            await party.save();
         }
-
-        await party.save();
     } catch (error) {
         return null
     }

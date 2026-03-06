@@ -3,73 +3,302 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="Description" content="Author: Mohamad Al Ghorani,
-	Designer: Mohamad Al Ghorani, Category: app,">
-	<meta name="theme-color" content="#5e00ff"/>
-	<!-- <link rel="apple-touch-icon" href="/icons/logo.png"> -->
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title><%- title %></title>
-	<script>
-			const room = "<%= id %>"
-			const name = "<%= name %>"
-	</script>
-	<!-- <link rel="shortcut icon" href="/icons/icon-72x72.png" type="image/png" /> -->
-	<!-- <link rel="manifest" href="/manifest.json">  -->
-	<script defer src="/index.js"></script>
+	<meta name="description" content="Party 2020 - Listen to music together in real-time. Chat, control playback, and vibe with friends.">
+	<meta name="theme-color" content="#121212">
+	<meta name="color-scheme" content="dark">
+	<meta property="og:title" content="Party 2020">
+	<meta property="og:description" content="Join the party and listen to music together in real-time.">
+	<meta property="og:type" content="website">
+	<title>Party - Party 2020</title>
+	<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+	<link rel="manifest" href="/manifest.json">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="/index.css">
+	<script>
+		var room = <%- JSON.stringify(id).replace(/</g, '\\u003c') %>;
+		var name = <%- JSON.stringify(name).replace(/</g, '\\u003c') %>;
+		var userAvatar = <%- JSON.stringify(avatar || "").replace(/</g, '\\u003c') %>;
+		var playlistTracks = <%- JSON.stringify(tracksData.items.map(function(t) { return { id: t.track.id, name: t.track.name, artists: t.track.artists.map(function(a) { return a.name }).join(', '), art: t.track.album.images[0] ? t.track.album.images[0].url : '' }; })).replace(/</g, '\\u003c') %>;
+	</script>
+	<script defer src="/index.js"></script>
 </head>
 <body>
-<header>
-	<h1>Party 2020</h1>
-<div>
-<h2>Hello <span class="user-name"><%- name %></span></h2>
-<h4>Party code: <input readonly class="id" type="text" value="<%- id %>"><button class="copy">Copy</button></h4>
-<p>Share this code with your guests so they can join</p>
-<div id="lights" ></div>
-</div>
-</header>
-<button class="playlist-btn">Playlist</button>
-<main>
-<div class="party-container">
-	<div class="chat-container change-size">
-		<ul id="messages"></ul>
-		<form class="message-form change-size" id="form" action="">
-			<input type="text"  autocomplete="off" id="m">
-			<input type="submit" value="send">
+<a href="#messages" class="skip-link">Skip to chat</a>
+
+<div class="party-layout" role="application" aria-label="Party 2020 Room">
+
+	<!-- TOP BAR -->
+	<header class="top-bar" role="banner">
+		<div class="brand" aria-label="Party 2020"><img src="/favicon.svg" alt="" class="brand-logo" aria-hidden="true">Party 2020</div>
+		<div class="party-info">
+			<div class="party-code">
+				<span class="material-symbols-outlined" style="font-size:16px; color: var(--text-muted);" aria-hidden="true">tag</span>
+				<input readonly class="id" type="text" value="<%= id %>" aria-label="Party code">
+				<button class="copy-btn" title="Copy party code" aria-label="Copy party code to clipboard">
+					<span class="material-symbols-outlined" style="font-size:16px;" aria-hidden="true">content_copy</span>
+				</button>
+			</div>
+		</div>
+		<div class="top-bar-actions">
+			<span class="user-greeting">Hello, <strong><%= name %></strong></span>
+			<% if (avatar) { %>
+				<img src="<%= avatar %>" alt="<%= name %>" class="user-profile-img" referrerpolicy="no-referrer">
+			<% } else { %>
+				<div class="user-profile-placeholder" aria-hidden="true"><%= name.charAt(0).toUpperCase() %></div>
+			<% } %>
+		</div>
+	</header>
+
+	<!-- MAIN CONTENT -->
+	<main class="main-content">
+
+		<!-- Now Playing -->
+		<section class="now-playing empty" id="now-playing" aria-label="Now playing" role="status" aria-live="polite">
+			<span class="material-symbols-outlined" style="font-size:20px;" aria-hidden="true">music_note</span>
+			No track playing yet
+		</section>
+
+		<!-- Up Next -->
+		<section class="up-next" id="up-next" aria-label="Up next">
+			<button class="up-next-toggle" id="up-next-toggle" aria-expanded="false" aria-controls="up-next-list">
+				<span class="material-symbols-outlined" style="font-size:18px;" aria-hidden="true">queue_music</span>
+				<span class="up-next-label">Up Next</span>
+				<span class="up-next-preview" id="up-next-preview">No tracks queued</span>
+				<span class="material-symbols-outlined up-next-chevron" style="font-size:18px;" aria-hidden="true">expand_more</span>
+			</button>
+			<div class="up-next-list" id="up-next-list" role="list" aria-label="Queue">
+				<div class="recs-empty" id="up-next-empty">The next song from the playlist will play automatically</div>
+			</div>
+		</section>
+
+		<!-- DJ Controls Bar -->
+		<nav class="dj-bar" id="dj-bar" aria-label="DJ playback controls">
+			<button class="btn-icon" id="shuffle-btn" title="Shuffle" aria-label="Toggle shuffle" aria-pressed="false">
+				<span class="material-symbols-outlined" aria-hidden="true">shuffle</span>
+			</button>
+			<button class="btn-icon btn-play" id="play-pause-btn" title="Play/Pause" aria-label="Play or pause playback">
+				<span class="material-symbols-outlined" aria-hidden="true">play_arrow</span>
+			</button>
+			<button class="btn-icon" id="skip-btn" title="Skip" aria-label="Skip to next track">
+				<span class="material-symbols-outlined" aria-hidden="true">skip_next</span>
+			</button>
+			<button class="btn-icon" id="repeat-btn" title="Repeat" aria-label="Toggle repeat mode" aria-pressed="false">
+				<span class="material-symbols-outlined" aria-hidden="true">repeat</span>
+			</button>
+			<div class="volume-group" role="group" aria-label="Volume control">
+				<span class="material-symbols-outlined" aria-hidden="true">volume_up</span>
+				<input id="volume" type="range" min="0" max="100" value="50" aria-label="Volume level">
+			</div>
+			<button class="announce-chip" id="announce-btn" title="Hold to announce" aria-label="Hold to record voice announcement">
+				<span class="material-symbols-outlined" style="font-size:16px;" aria-hidden="true">mic</span>
+				<span class="announce-text">Announce</span>
+			</button>
+		</nav>
+
+		<!-- Chat -->
+		<ul class="chat-area" id="messages" role="log" aria-label="Chat messages" aria-live="polite"></ul>
+
+		<!-- Chat Input -->
+		<form class="chat-input" id="form" action="" role="search" aria-label="Send a chat message">
+			<label for="m" class="sr-only">Message</label>
+			<input type="text" autocomplete="off" id="m" placeholder="Type a message..." aria-label="Type a message">
+			<button type="submit" aria-label="Send message">
+				<span class="material-symbols-outlined" aria-hidden="true">send</span>
+			</button>
 		</form>
-	</div>
-	<div class="tracks-container">
-		<div class="playlist-head">
-			<h3>Playlist for this party</h3>
-			<label class="dj-volume" for="volume">Volume</label>
-			<input class="dj-volume" id="volume" type="range" min="0" max="100">
+	</main>
+
+	<!-- RIGHT SIDEBAR -->
+	<aside class="sidebar" aria-label="Party sidebar">
+		<div class="sidebar-tabs" role="tablist" aria-label="Sidebar sections">
+			<button class="sidebar-tab active" data-panel="tracks-panel" role="tab" aria-selected="true" aria-controls="tracks-panel" id="tab-tracks">
+				<span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;" aria-hidden="true">queue_music</span>
+				Tracks
+			</button>
+			<button class="sidebar-tab" data-panel="search-panel" role="tab" aria-selected="false" aria-controls="search-panel" id="tab-search">
+				<span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;" aria-hidden="true">search</span>
+				Search
+			</button>
+			<button class="sidebar-tab" data-panel="recs-panel" role="tab" aria-selected="false" aria-controls="recs-panel" id="tab-recs">
+				<span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;" aria-hidden="true">auto_awesome</span>
+				For You
+			</button>
+			<button class="sidebar-tab" data-panel="users-panel" role="tab" aria-selected="false" aria-controls="users-panel" id="tab-users">
+				<span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;" aria-hidden="true">group</span>
+				<span class="users-count-inline" aria-label="Online users">0</span>
+			</button>
 		</div>
-		<div class="audio-container">
-			<% tracksData.items.forEach(function(track) { %>
-				<div class="track-card">
-					<img src="<%- track.track.album.images[0].url %>" alt="">
-					<div>
-						<p><%- track.track.name %></p>
-						<button data-id="<%- track.track.id %>" class="play-btn">Play</button>
+
+		<!-- Tracks Panel -->
+		<div class="sidebar-panel active" id="tracks-panel" role="tabpanel" aria-labelledby="tab-tracks">
+			<div class="tracks-scroll">
+				<% tracksData.items.forEach(function(track) { %>
+					<div class="track-item" role="listitem">
+						<img class="track-art" src="<%= track.track.album.images[0].url %>" alt="<%= track.track.album.name %> album art" loading="lazy">
+						<div class="track-info">
+							<div class="track-name"><%= track.track.name %></div>
+							<div class="track-artist"><%= track.track.artists.map(function(a){ return a.name }).join(', ') %></div>
+						</div>
+						<div class="track-actions dj-only">
+							<button class="track-queue-btn" data-id="<%= track.track.id %>" data-uri="spotify:track:<%= track.track.id %>" title="Add to queue" aria-label="Add <%= track.track.name %> to queue">
+								<span class="material-symbols-outlined" style="font-size:18px;" aria-hidden="true">playlist_add</span>
+							</button>
+							<button class="track-play-btn" data-id="<%= track.track.id %>" title="Play now" aria-label="Play <%= track.track.name %>">
+								<span class="material-symbols-outlined" style="font-size:18px;" aria-hidden="true">play_arrow</span>
+							</button>
+						</div>
 					</div>
+				<% }) %>
+			</div>
+		</div>
+
+		<!-- Search Panel -->
+		<div class="sidebar-panel" id="search-panel" role="tabpanel" aria-labelledby="tab-search">
+			<div class="search-box">
+				<div class="search-input-group">
+					<span class="material-symbols-outlined" aria-hidden="true">search</span>
+					<label for="search-input" class="sr-only">Search songs on Spotify</label>
+					<input type="text" id="search-input" placeholder="Search songs on Spotify..." aria-label="Search songs on Spotify">
 				</div>
-			<% }) %>
+			</div>
+			<div class="search-results" id="search-results" role="list" aria-label="Search results">
+				<div class="recs-empty">Search for any song on Spotify</div>
+			</div>
 		</div>
-		<div class="playlist-footer"></div>
-	</div>
-	<div class="userList">
-		<div class="userList-header">
-			<button class="close">Close</button>
-			<span class="users-number"></span>
-			<p class="list-host"></p>
+
+		<!-- Recommendations Panel -->
+		<div class="sidebar-panel" id="recs-panel" role="tabpanel" aria-labelledby="tab-recs">
+			<div class="recs-header">
+				<span style="font-weight:600;">Suggested for you</span>
+				<button class="btn btn-sm btn-secondary" id="refresh-recs" aria-label="Refresh recommendations">
+					<span class="material-symbols-outlined" style="font-size:16px;" aria-hidden="true">refresh</span>
+					Refresh
+				</button>
+			</div>
+			<div class="recs-scroll" id="recs-results" role="list" aria-label="Recommended tracks">
+				<div class="recs-empty">Play a song first to get recommendations</div>
+			</div>
 		</div>
-		<div class="users-container">
-			<ul>
-			</ul>
+
+		<!-- Users Panel -->
+		<div class="sidebar-panel" id="users-panel" role="tabpanel" aria-labelledby="tab-users">
+			<div class="users-header">
+				<span style="font-weight:600;">Guests</span>
+				<span class="users-count" id="users-count" aria-label="Number of guests online">0</span>
+			</div>
+			<p class="host-hint" id="host-hint">Click a user to make them the DJ</p>
+			<ul class="users-list" id="users-list" aria-label="Online guests"></ul>
 		</div>
-	</div>
+	</aside>
 
 </div>
 
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mobile-nav" aria-label="Mobile navigation">
+	<div class="mobile-nav-items" role="tablist">
+		<button class="mobile-nav-item active" data-view="chat" role="tab" aria-selected="true" aria-label="Chat">
+			<span class="material-symbols-outlined" aria-hidden="true">chat</span>
+			Chat
+		</button>
+		<button class="mobile-nav-item" data-view="tracks" role="tab" aria-selected="false" aria-label="Tracks">
+			<span class="material-symbols-outlined" aria-hidden="true">queue_music</span>
+			Tracks
+		</button>
+		<button class="mobile-nav-item" data-view="search" role="tab" aria-selected="false" aria-label="Search">
+			<span class="material-symbols-outlined" aria-hidden="true">search</span>
+			Search
+		</button>
+		<button class="mobile-nav-item" data-view="recs" role="tab" aria-selected="false" aria-label="Recommendations">
+			<span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>
+			For You
+		</button>
+		<button class="mobile-nav-item" data-view="users" role="tab" aria-selected="false" aria-label="Guests">
+			<span class="material-symbols-outlined" aria-hidden="true">group</span>
+			<span class="mobile-user-count">0</span>
+		</button>
+	</div>
+</nav>
 
-<%- include ./partials/footer.ejs %>
+<!-- Mobile Panels -->
+<div class="mobile-panel" id="mobile-tracks" role="dialog" aria-label="Playlist">
+	<div class="mobile-panel-header">
+		<h3>Playlist</h3>
+		<button class="mobile-close" data-close="mobile-tracks" aria-label="Close playlist panel">
+			<span class="material-symbols-outlined" aria-hidden="true">close</span>
+		</button>
+	</div>
+	<div class="tracks-scroll" id="mobile-tracks-scroll" role="list" aria-label="Playlist tracks">
+		<% tracksData.items.forEach(function(track) { %>
+			<div class="track-item" role="listitem">
+				<img class="track-art" src="<%= track.track.album.images[0].url %>" alt="<%= track.track.album.name %> album art" loading="lazy">
+				<div class="track-info">
+					<div class="track-name"><%= track.track.name %></div>
+					<div class="track-artist"><%= track.track.artists.map(function(a){ return a.name }).join(', ') %></div>
+				</div>
+				<div class="track-actions dj-only">
+					<button class="track-queue-btn" data-id="<%= track.track.id %>" data-uri="spotify:track:<%= track.track.id %>" title="Queue" aria-label="Add <%= track.track.name %> to queue">
+						<span class="material-symbols-outlined" style="font-size:18px;" aria-hidden="true">playlist_add</span>
+					</button>
+					<button class="track-play-btn" data-id="<%= track.track.id %>" title="Play" aria-label="Play <%= track.track.name %>">
+						<span class="material-symbols-outlined" style="font-size:18px;" aria-hidden="true">play_arrow</span>
+					</button>
+				</div>
+			</div>
+		<% }) %>
+	</div>
+</div>
+
+<div class="mobile-panel" id="mobile-search" role="dialog" aria-label="Search">
+	<div class="mobile-panel-header">
+		<h3>Search</h3>
+		<button class="mobile-close" data-close="mobile-search" aria-label="Close search panel">
+			<span class="material-symbols-outlined" aria-hidden="true">close</span>
+		</button>
+	</div>
+	<div class="search-box">
+		<div class="search-input-group">
+			<span class="material-symbols-outlined" aria-hidden="true">search</span>
+			<label for="mobile-search-field" class="sr-only">Search songs on Spotify</label>
+			<input type="text" id="mobile-search-field" class="mobile-search-input" placeholder="Search songs on Spotify..." aria-label="Search songs on Spotify">
+		</div>
+	</div>
+	<div class="search-results" id="mobile-search-results" role="list" aria-label="Search results">
+		<div class="recs-empty">Search for any song on Spotify</div>
+	</div>
+</div>
+
+<div class="mobile-panel" id="mobile-recs" role="dialog" aria-label="Recommendations">
+	<div class="mobile-panel-header">
+		<h3>For You</h3>
+		<button class="mobile-close" data-close="mobile-recs" aria-label="Close recommendations panel">
+			<span class="material-symbols-outlined" aria-hidden="true">close</span>
+		</button>
+	</div>
+	<div class="recs-header">
+		<span style="font-weight:600;">Suggested tracks</span>
+		<button class="btn btn-sm btn-secondary mobile-refresh-recs" aria-label="Refresh recommendations">
+			<span class="material-symbols-outlined" style="font-size:16px;" aria-hidden="true">refresh</span>
+		</button>
+	</div>
+	<div class="recs-scroll" id="mobile-recs-results" role="list" aria-label="Recommended tracks">
+		<div class="recs-empty">Play a song first to get recommendations</div>
+	</div>
+</div>
+
+<div class="mobile-panel" id="mobile-users" role="dialog" aria-label="Guests">
+	<div class="mobile-panel-header">
+		<h3>Guests</h3>
+		<button class="mobile-close" data-close="mobile-users" aria-label="Close guests panel">
+			<span class="material-symbols-outlined" aria-hidden="true">close</span>
+		</button>
+	</div>
+	<p class="host-hint" id="mobile-host-hint">Click a user to make them the DJ</p>
+	<ul class="users-list" id="mobile-users-list" aria-label="Online guests"></ul>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+</body>
+</html>
