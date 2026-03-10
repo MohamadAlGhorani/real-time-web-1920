@@ -1,7 +1,7 @@
 {
-  "name": "progressive-web-apps-1920",
+  "name": "party-2020",
   "version": "1.0.0",
-  "description": "In this course we will convert the client side web application previously made at the OBA into a server side rendered application. We also add functionalities based on the Service Worker and turn the application into a Progressive Web App. Ultimately we are going to implement a series of optimisations to improve the performance of the application.",
+  "description": "A real-time collaborative Spotify listening party app. Users authenticate with Spotify, create or join party rooms, and listen to music together in sync.",
   "main": "server.js",
   "engines": {
     "node": ">=20.0.0"
@@ -28,14 +28,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MohamadAlGhorani/progressive-web-apps-1920.git"
+    "url": "git+https://github.com/MohamadAlGhorani/party-2020.git"
   },
   "author": "Mohamad Al Ghorani",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/MohamadAlGhorani/progressive-web-apps-1920/issues"
+    "url": "https://github.com/MohamadAlGhorani/party-2020/issues"
   },
-  "homepage": "https://github.com/MohamadAlGhorani/progressive-web-apps-1920#readme",
+  "homepage": "https://github.com/MohamadAlGhorani/party-2020#readme",
   "dependencies": {
     "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
