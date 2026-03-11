@@ -1,0 +1,18 @@
+<%- include('./partials/head.ejs') %>
+
+<main id="main" class="auth-page" role="main" aria-label="Error">
+	<div class="auth-card" role="region" aria-labelledby="error-heading">
+		<div class="logo" id="error-heading" role="heading" aria-level="1"><img src="/favicon.svg" alt="" class="logo-icon" aria-hidden="true">Party 2020</div>
+		<p class="subtitle"><%= heading %></p>
+		<div class="divider" role="separator"></div>
+		<p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem;">
+			<%= message %>
+		</p>
+		<a href="/" class="btn btn-primary" style="width: 100%;" role="button" aria-label="Go to home page">
+			<span class="material-symbols-outlined" style="font-size: 20px;" aria-hidden="true">home</span>
+			Try Again
+		</a>
+	</div>
+</main>
+
+<%- include('./partials/footer.ejs') %>

@@ -217,7 +217,11 @@ app
       });
     } catch (error) {
       console.error(error);
-      res.status(500).send("Failed to load party. Please try logging in again.");
+      res.status(500).render("error", {
+        title: "Error",
+        heading: "Failed to load party",
+        message: "Could not load the party. Your Spotify account may not be authorized for this app. Ask the party host to add your Spotify email in the Spotify Developer Dashboard.",
+      });
     }
   });
 

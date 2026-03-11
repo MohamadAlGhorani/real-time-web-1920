@@ -49,6 +49,10 @@ module.exports = async function (req, res) {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).send('Internal Server Error');
+        res.status(500).render("error", {
+            title: "Error",
+            heading: "Could not load playlists",
+            message: "Failed to fetch your Spotify playlists. Your account may not be authorized for this app. Ask the party host to add your Spotify email in the Spotify Developer Dashboard.",
+        });
     }
 }

@@ -41,6 +41,23 @@ module.exports = async (request, response) => {
         const spotifyResponse = await fetch(url, fetchOptions);
         const data = await spotifyResponse.json();
 
+        if (data.error) {
+            console.error("Spotify auth error:", data.error, data.error_description);
+            return response.status(403).render("error", {
+                title: "Access Denied",
+                heading: "Account not authorized",
+                message: "Your Spotify account is not on the allowlist for this app. Ask the party host to add your Spotify email in the Spotify Developer Dashboard.",
+            });
+        }
+
+        if (!data.access_token) {
+            return response.status(500).render("error", {
+                title: "Login Failed",
+                heading: "Login failed",
+                message: "Could not get an access token from Spotify. Please try logging in again.",
+            });
+        }
+
         response.cookie("accessToken", data.access_token, {
             sameSite: "lax",
             secure: isProduction,
@@ -54,7 +71,11 @@ module.exports = async (request, response) => {
         response.redirect(`/home`);
     } catch (error) {
         console.error("Error:", error);
-        response.status(500).send("Authentication failed. Please try again.");
+        response.status(500).render("error", {
+            title: "Login Failed",
+            heading: "Something went wrong",
+            message: "Authentication failed. Please try logging in again.",
+        });
     }
 };
 
